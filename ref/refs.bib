@@ -1,335 +1,821 @@
-@article{zhangkun1994,
-  author     = {张昆 and 冯立群 and 余昌钰 and others},
-  title      = {机器人柔性手腕的球面齿轮设计研究},
-  journal    = {清华大学学报: 自然科学版},
-  volume     = {34},
-  number     = {2},
-  pages      = {1--7},
-  year       = {1994},
-  key        = {zhang1 kun1},
+@inproceedings{zhang2024h2o,
+author = {Zhang, Zhenyu and Sheng, Ying and Zhou, Tianyi and Chen, Tianlong and Zheng, Lianmin and Cai, Ruisi and Song, Zhao and Tian, Yuandong and R\'{e}, Christopher and Barrett, Clark and Wang, Zhangyang and Chen, Beidi},
+title = {H2O: heavy-hitter oracle for efficient generative inference of large language models},
+year = {2024},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {Large Language Models (LLMs), despite their recent impressive accomplishments, are notably cost-prohibitive to deploy, particularly for applications involving longcontent generation, such as dialogue systems and story writing. Often, a large amount of transient state information, referred to as the KV cache, is stored in GPU memory in addition to model parameters, scaling linearly with the sequence length and batch size. In this paper, we introduce a novel approach for implementing the KV cache which significantly reduces its memory footprint. Our approach is based on the noteworthy observation that a small portion of tokens contributes most of the value when computing attention scores. We call these tokens Heavy Hitters (H2). Through a comprehensive investigation, we find that (i) the emergence of H2 is natural and strongly correlates with the frequent co-occurrence of tokens in the text, and (ii) removing them results in significant performance degradation. Based on these insights, we propose Heavy Hitter Oracle (H2O), a KV cache eviction policy that dynamically retains a balance of recent and H 2 tokens. We formulate the KV cache eviction as a dynamic submodular problem and prove (under mild assumptions) a theoretical guarantee for our novel eviction algorithm which could help guide future work. We validate the accuracy of our algorithm with OPT, LLaMA, and GPT-NeoX across a wide range of tasks. Our implementation of H2O with 20\% heavy hitters improves the throughput over three leading inference systems DeepSpeed Zero-Inference, Hugging Face Accelerate, and FlexGen by up to 29\texttimes{}, 29\texttimes{}, and 3\texttimes{} on OPT-6.7B and OPT-30B. With the same batch size, H2O can reduce the latency by up to 1.9\texttimes{}. The code is available at https://github.com/FMInference/H2O.},
+booktitle = {Proceedings of the 37th International Conference on Neural Information Processing Systems},
+articleno = {1506},
+numpages = {50},
+location = {New Orleans, LA, USA},
+series = {NIPS '23}
 }
 
-@book{zhukezhen1973,
-  author     = {竺可桢},
-  title      = {物理学论},
-  address    = {北京},
-  publisher  = {科学出版社},
-  year       = {1973},
-  pages      = {56--60},
-  key        = {zhu2 ke3 zhen1},
+@misc{ren2024roco,
+      title={On the Efficacy of Eviction Policy for Key-Value Constrained Generative Language Model Inference}, 
+      author={Siyu Ren and Kenny Q. Zhu},
+      year={2024},
+      eprint={2402.06262},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2402.06262}, 
 }
 
-@inproceedings{dupont1974bone,
-  author     = {Dupont, B},
-  title      = {Bone marrow transplantation in severe combined immunodeficiency with an unrelated MLC compatible donor},
-  editor     = {White, H J and Smith, R},
-  booktitle  = {Proceedings of the third annual meeting of the International Society for Experimental Hematology},
-  address    = {Houston},
-  publisher  = {International Society for Experimental Hematology},
-  year       = {1974},
-  pages      = {44--46},
+@inproceedings{adnan2024keyformer,
+ author = {Adnan, Muhammad and Arunkumar, Akhil and Jain, Gaurav and Nair, Prashant and Soloveychik, Ilya and Kamath, Purushotham},
+ booktitle = {Proceedings of Machine Learning and Systems},
+ editor = {P. Gibbons and G. Pekhimenko and C. De Sa},
+ pages = {114--127},
+ title = {Keyformer: KV Cache reduction through key tokens selection for Efficient Generative Inference},
+ url = {https://proceedings.mlsys.org/paper_files/paper/2024/file/48fecef47b19fe501d27d338b6d52582-Paper-Conference.pdf},
+ volume = {6},
+ publisher = {Machine Learning and Systems},
+ address = "Santa Clara, California, USA",
+ year = {2024}
 }
 
-@mastersthesis{zhengkaiqing1987,
-  author     = {郑开青},
-  title      = {通讯系统模拟及软件},
-  address    = {北京},
-  school     = {清华大学无线电系},
-  year       = {1987},
-  key        = {zheng4 kai1 qing1},
+
+@misc{li2024snapkv,
+      title={SnapKV: LLM Knows What You are Looking for Before Generation}, 
+      author={Yuhong Li and Yingbing Huang and Bowen Yang and Bharat Venkitesh and Acyr Locatelli and Hanchen Ye and Tianle Cai and Patrick Lewis and Deming Chen},
+      year={2024},
+      eprint={2404.14469},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2404.14469}, 
 }
 
-@patent{jiangxizhou1980,
-  author     = {姜锡洲},
-  title      = {一种温热外敷药制备方案},
-  address    = {中国},
-  number     = {88105607.3},
-  year       = {1980},
-  date       = {1980-07-26},
-  key        = {jiang1 xi1 zhou1},
+
+@misc{dai2024corm,
+      title={CORM: Cache Optimization with Recent Message for Large Language Model Inference}, 
+      author={Jincheng Dai and Zhuowei Huang and Haiyun Jiang and Chen Chen and Deng Cai and Wei Bi and Shuming Shi},
+      year={2024},
+      eprint={2404.15949},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2404.15949}, 
 }
 
-@standard{jianduju1994,
-  author     = {中华人民共和国国家技术监督局},
-  title      = {GB3100-3102. 中华人民共和国国家标准-量与单位},
-  address    = {北京},
-  publisher  = {中国标准出版社},
-  year       = {1994},
-  key        = {zhong1 hua2 ren2 min2 gong4 he2 guo2},
+
+
+@article{xiao2023efficient,
+
+title={Efficient Streaming Language Models with Attention Sinks},
+
+author={Xiao, Guangxuan and Tian, Yuandong and Chen, Beidi and Han, Song and Lewis, Mike},
+
+journal={ICLR},
+
+year={2024}
+
 }
 
-@article{merkt1995rotational,
-  author     = {Merkt, Fr{\'e}d{\'e}ric and Mackenzie, S R and Softley, Timothy P},
-  title      = {Rotational Autoionization Dynamics in High Rydberg States of Nitrogen},
-  journal    = {J Chem Phys},
-  year       = {1995},
-  volume     = {103},
-  pages      = {4509--4518},
+@inproceedings{han2024lm,
+    title = "{LM}-Infinite: Zero-Shot Extreme Length Generalization for Large Language Models",
+    author = "Han, Chi  and
+      Wang, Qifan  and
+      Peng, Hao  and
+      Xiong, Wenhan  and
+      Chen, Yu  and
+      Ji, Heng  and
+      Wang, Sinong",
+    editor = "Duh, Kevin  and
+      Gomez, Helena  and
+      Bethard, Steven",
+    booktitle = "Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)",
+    month = jun,
+    year = "2024",
+    address = "Mexico City, Mexico",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.naacl-long.222/",
+    doi = "10.18653/v1/2024.naacl-long.222",
+    pages = "3991--4008",
+    abstract = "Today`s large language models (LLMs) typically train on short text segments (e.g., {\ensuremath{<}}4K tokens) due to the quadratic complexity of their Transformer architectures. As a result, their performance suffers drastically on inputs longer than those encountered during training, substantially limiting their applications in real-world tasks involving long contexts such as encod- ing scientific articles, code repositories, or long dialogues. Through both theoretical analysis and empirical investigation, this work identifies three major factors contributing to this length generalization failure. Our theoretical analysis reveals that commonly used techniques like using a sliding-window attention pattern or relative positional encodings are inadequate to address them. Answering these challenges, we propose LM-Infinite, a simple and effective method for enhancing LLMs' capabilities of handling long contexts. LM-Infinite is highly flexible and can be used with most modern LLMs off-the-shelf. Without any parameter updates, it allows LLMs pre-trained with 2K or 4K-long segments to generalize to up to 200M length inputs while retaining perplexity. It also improves performance on downstream tasks such as Passkey Retrieval and Qasper in the zero-shot setting. LM-Infinite brings substantial efficiency improvements: it achieves 2.7{\texttimes} decoding speed up and 7.5{\texttimes} memory saving over the original model. Our code will be publicly available upon publication."
 }
 
-@article{mellinger1996laser,
-  author     = {Mellinger, A and Vidal, C R and Jungen, {Ch}},
-  title      = {Laser reduced fluorescence study of the carbon monoxide nd triplet Rydberg series - Experimental results and multichannel quantum defect analysis},
-  journal    = {J Chem Phys},
-  year       = {1996},
-  volume     = {104},
-  pages      = {8913--8921},
+
+@inproceedings{dao2022flashattention,
+author = {Dao, Tri and Fu, Daniel Y. and Ermon, Stefano and Rudra, Atri and R\'{e}, Christopher},
+title = {FLASHATTENTION: fast and memory-efficient exact attention with IO-awareness},
+year = {2024},
+isbn = {9781713871088},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {Transformers are slow and memory-hungry on long sequences, since the time and memory complexity of self-attention are quadratic in sequence length. Approximate attention methods have attempted to address this problem by trading off model quality to reduce the compute complexity, but often do not achieve wall-clock speedup. We argue that a missing principle is making attention algorithms IO-aware— accounting for reads and writes between levels of GPU memory. We propose FLASHATTENTION, an IO-aware exact attention algorithm that uses tiling to reduce the number of memory reads/writes between GPU high bandwidth memory (HBM) and GPU on-chip SRAM. We analyze the IO complexity of FLASHATTENTION, showing that it requires fewer HBM accesses than standard attention, and is optimal for a range of SRAM sizes. We also extend FLASHATTENTION to block-sparse attention, yielding an approximate attention algorithm that is faster than any existing approximate attention method. FLASHATTENTION trains Transformers faster than existing baselines: 15\% end-to-end wall-clock speedup on BERT-large (seq. length 512) compared to the MLPerf 1.1 training speed record, 3\texttimes{} speedup on GPT-2 (seq. length 1K), and 2.4\texttimes{} speedup on long-range arena (seq. length 1K-4K). FLASHATTENTION and block-sparse FLASHATTENTION enable longer context in Transformers, yielding higher quality models (0.7 better perplexity on GPT-2 and 6.4 points of lift on long-document classification) and entirely new capabilities: the first Transformers to achieve better-than-chance performance on the Path-X challenge (seq. length 16K, 61.4\% accuracy) and Path-256 (seq. length 64K, 63.1\% accuracy).},
+booktitle = {Proceedings of the 36th International Conference on Neural Information Processing Systems},
+articleno = {1189},
+numpages = {16},
+location = {New Orleans, LA, USA},
+series = {NIPS '22}
 }
 
-@article{bixon1996dynamics,
-  author     = {Bixon, M and Jortner, Joshua},
-  title      = {The dynamics of predissociating high {Rydberg} states of {NO}},
-  journal    = {J Chem Phys},
-  year       = {1996},
-  volume     = {105},
-  pages      = {1363--1382},
+@misc{dao2023flashattention,
+      title={FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning}, 
+      author={Tri Dao},
+      year={2023},
+      eprint={2307.08691},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2307.08691}, 
 }
 
-@article{mahui1995,
-  author     = {马辉 and 李俭 and 刘耀明 and others},
-  title      = {利用 {REMPI} 方法测量 {BaF} 高里德堡系列光谱},
-  journal    = {化学物理学报},
-  year       = {1995},
-  volume     = {8},
-  pages      = {308--311},
-  key        = {ma3 hui1},
+@misc{shah2024flashattention,
+      title={FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision}, 
+      author={Jay Shah and Ganesh Bikshandi and Ying Zhang and Vijay Thakkar and Pradeep Ramani and Tri Dao},
+      year={2024},
+      eprint={2407.08608},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2407.08608}, 
 }
 
-@article{carlson1981two,
-  author     = {Carlson, N W and Taylor, A J and Jones, K M and Schawlow, A L},
-  title      = {Two-step polarization-labeling spectroscopy of excited states of {Na2}},
-  journal    = {Phys Rev A},
-  year       = {1981},
-  volume     = {24},
-  pages      = {822--834},
+
+@misc{radford2018gpt,
+  title = {Improving language understanding by generative pre-training},
+  author = {Radford, Alec and Narasimhan, Karthik and Salimans, Tim and Sutskever, Ilya and others},
+  year = {2018},
+  howpublished = {\url{https://openai.com/blog/language-unsupervised}},
+  note = {OpenAI Blog},
 }
 
-@article{taylor1983scanning,
-  author     = {Taylor, A J and Jones, K M and Schawlow, A L},
-  title      = {Scanning pulsed-polarization spectrometer applied to {Na2}},
-  journal    = {J Opt Soc Am},
-  year       = {1983},
-  volume     = {73},
-  pages      = {994--998},
+
+@article{radford2019gpt2,
+  title={Language models are unsupervised multitask learners},
+  author={Radford, Alec and Wu, Jeffrey and Child, Rewon and Luan, David and Amodei, Dario and Sutskever, Ilya and others},
+  journal={OpenAI blog},
+  volume={1},
+  number={8},
+  pages={9},
+  year={2019}
 }
 
-@article{taylor1981study,
-  author     = {Taylor, A J and Jones, K M and Schawlow, A L},
-  title      = {A study of the excited {1$\Sigma$g+} states in {Na2}},
-  journal    = {Opt Commun},
-  year       = {1981},
-  volume     = {39},
-  pages      = {47--50},
+@inproceedings{brown2020gpt3,
+author = {Brown, Tom B. and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and others},
+title = {Language models are few-shot learners},
+year = {2020},
+isbn = {9781713829546},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {We demonstrate that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even becoming competitive with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks. We also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora.},
+booktitle = {Proceedings of the 34th International Conference on Neural Information Processing Systems},
+articleno = {159},
+numpages = {25},
+location = {Vancouver, BC, Canada},
+series = {NIPS '20}
 }
 
-@article{shimizu1983laser,
-  author     = {Shimizu, Kazuko and Shimizu, Fujio},
-  title      = {Laser induced fluorescence spectra of the a {3$\Pi$u--X 1$\Sigma$g+} band of {Na2} by molecular beam},
-  journal    = {J Chem Phys},
-  year       = {1983},
-  volume     = {78},
-  pages      = {1126--1131},
+
+@misc{achiam2023gpt4,
+      title={GPT-4 Technical Report}, 
+      author={OpenAI and Josh Achiam and Steven Adler and Sandhini Agarwal and Lama Ahmad and Ilge Akkaya and Florencia Leoni Aleman and Diogo Almeida and Janko Altenschmidt and Sam Altman and Shyamal Anadkat and others.},
+      year={2024},
+      eprint={2303.08774},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2303.08774}, 
 }
 
-@article{atkinson1982experimental,
-  author     = {Atkinson, J B and Becker, J and Demtr{\"o}der, W},
-  title      = {Experimental observation of the a {3$\Pi$u} state of {Na2}},
-  journal    = {Chem Phys Lett},
-  year       = {1982},
-  volume     = {87},
-  pages      = {92--97},
+@misc{touvron2023llama,
+      title={LLaMA: Open and Efficient Foundation Language Models}, 
+      author={Hugo Touvron and Thibaut Lavril and Gautier Izacard and Xavier Martinet and Marie-Anne Lachaux and Timothée Lacroix and Baptiste Rozière and Naman Goyal and Eric Hambro and Faisal Azhar and Aurelien Rodriguez and Armand Joulin and Edouard Grave and Guillaume Lample},
+      year={2023},
+      eprint={2302.13971},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2302.13971}, 
 }
 
-@article{kusch1975perturbations,
-  author     = {Kusch, P and Hessel, M M},
-  title      = {Perturbations in the A {1$\Sigma$u+} state of {Na2}},
-  journal    = {J Chem Phys},
-  year       = {1975},
-  volume     = {63},
-  pages      = {4087--4088},
+@misc{touvron2023llama2,
+      title={Llama 2: Open Foundation and Fine-Tuned Chat Models}, 
+      author={Hugo Touvron and Louis Martin and Kevin Stone and Peter Albert and Amjad Almahairi and Yasmine Babaei and Nikolay Bashlykov and Soumya Batra and Prajjwal Bhargava and Shruti Bhosale and others},
+      year={2023},
+      eprint={2307.09288},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2307.09288}, 
 }
 
-@book{guangxi1993,
-  author     = {广西壮族自治区林业厅},
-  title      = {广西自然保护区},
-  address    = {北京},
-  publisher  = {中国林业出版社},
-  year       = {1993},
-  key        = {guang3 xi1 zhuang4 zu2 zi4 zhi4 qu1},
+@misc{dubey2024llama3,
+      title={The Llama 3 Herd of Models}, 
+      author={Aaron Grattafiori and Abhimanyu Dubey and Abhinav Jauhri and Abhinav Pandey and Abhishek Kadian and Ahmad Al-Dahle and Aiesha Letman and Akhil Mathur and Alan Schelten and Alex Vaughan and others},
+      year={2024},
+      eprint={2407.21783},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2407.21783}, 
 }
 
-@book{huosini1989guwu,
-  author     = {霍斯尼},
-  title      = {谷物科学与工艺学原理},
-  translator = {李庆龙},
-  edition    = {2},
-  address    = {北京},
-  publisher  = {中国食品出版社},
-  year       = {1989},
-  pages      = {15--20},
-  key        = {huo4 si1 ni2},
+@misc{roziere2023codellama,
+      title={Code Llama: Open Foundation Models for Code}, 
+      author={Baptiste Rozière and Jonas Gehring and Fabian Gloeckle and Sten Sootla and Itai Gat and Xiaoqing Ellen Tan and Yossi Adi and Jingyu Liu and Romain Sauvestre and Tal Remez and Jérémy Rapin and Artyom Kozhevnikov and Ivan Evtimov and Joanna Bitton and Manish Bhatt and Cristian Canton Ferrer and Aaron Grattafiori and Wenhan Xiong and Alexandre Défossez and Jade Copet and Faisal Azhar and Hugo Touvron and Louis Martin and Nicolas Usunier and Thomas Scialom and Gabriel Synnaeve},
+      year={2024},
+      eprint={2308.12950},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2308.12950}, 
 }
 
-@book{wangfuzhi1865songlun,
-  author     = {王夫之},
-  title      = {宋论},
-  edition    = {刻本},
-  address    = {金陵},
-  publisher  = {曾氏},
-  year       = {1865（清同治四年）},
-  key        = {wang2 fu1 zhi1},
+@online{MosaicML2023mpt30b,
+    author    = {MosaicML NLP Team},
+    title     = {Introducing MPT-30B: Raising the bar
+for open-source foundation models},
+    year      = {2023},
+    url       = {www.mosaicml.com/blog/mpt-30b},
+    note      = {Accessed: 2023-06-22},
+    organization = {MosaicML},
+    urldate   = {2023-06-22}
 }
 
-@book{zhaoyaodong1998xinshidai,
-  author     = {赵耀东},
-  title      = {新时代的工业工程师},
-  address    = {台北},
-  publisher  = {天下文化出版社},
-  year       = {1998},
-  urldate    = {1998-09-26},
-  url        = {http://www.ie.nthu.edu.tw/info/ie.newie.htm},
-  key        = {zhao4 yao4 dong1},
+@misc{jiang2023mistralv1,
+      title={Mistral 7B}, 
+      author={Albert Q. Jiang and Alexandre Sablayrolles and Arthur Mensch and Chris Bamford and Devendra Singh Chaplot and Diego de las Casas and Florian Bressand and Gianna Lengyel and Guillaume Lample and Lucile Saulnier and Lélio Renard Lavaud and Marie-Anne Lachaux and Pierre Stock and Teven Le Scao and Thibaut Lavril and Thomas Wang and Timothée Lacroix and William El Sayed},
+      year={2023},
+      eprint={2310.06825},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2310.06825}, 
 }
 
-@standard{biaozhunhua2002tushu,
-  author     = {全国信息与文献工作标准化技术委员会出版物格式分委员会},
-  title      = {GB/T 12450-2001 图书书名页},
-  address    = {北京},
-  publisher  = {中国标准出版社},
-  year       = {2002},
-  pages      = {1},
-  key        = {quan2 guo2 xin4 xi1},
+@misc{peng2023yarn,
+      title={YaRN: Efficient Context Window Extension of Large Language Models}, 
+      author={Bowen Peng and Jeffrey Quesnelle and Honglu Fan and Enrico Shippole},
+      year={2023},
+      eprint={2309.00071},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2309.00071}, 
 }
 
-@book{chubanzhuanye2004,
-  author     = {全国出版专业职业资格考试办公室},
-  title      = {全国出版专业职业资格考试辅导教材: 出版专业理论与实务•中级},
-  edition    = {2014},
-  address    = {上海},
-  publisher  = {上海辞书出版社},
-  year       = {2004},
-  pages      = {299--307},
-  key        = {quan2 guo2 chu1 ban3 ye4},
+@inproceedings{dosovitskiy2020vit,
+  author       = {Alexey Dosovitskiy and
+                  Lucas Beyer and
+                  Alexander Kolesnikov and
+                  Dirk Weissenborn and
+                  Xiaohua Zhai and
+                  Thomas Unterthiner and
+                  Mostafa Dehghani and
+                  Matthias Minderer and
+                  Georg Heigold and
+                  Sylvain Gelly and
+                  Jakob Uszkoreit and
+                  Neil Houlsby},
+  title        = {An Image is Worth 16x16 Words: Transformers for Image Recognition
+                  at Scale},
+  booktitle    = {9th International Conference on Learning Representations, {ICLR} 2021,
+                  Virtual Event, Austria, May 3-7, 2021},
+  year         = {2021},
+  crossref     = {DBLP:conf/iclr/2021},
+  url          = {https://openreview.net/forum?id=YicbFdNTTy},
+  timestamp    = {Wed, 23 Jun 2021 17:36:39 +0200},
+  biburl       = {https://dblp.org/rec/conf/iclr/DosovitskiyB0WZ21.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 
-@techreport{who1970factors,
-  author     = {{World Health Organization}},
-  title      = {Factors Regulating the Immune Response: Report of {WHO Scientific Group}},
-  address    = {Geneva},
-  publisher  = {WHO},
-  year       = {1970},
+@inproceedings{liu2021swin,
+  title={Swin transformer: Hierarchical vision transformer using shifted windows},
+  author={Liu, Ze and Lin, Yutong and Cao, Yue and Hu, Han and Wei, Yixuan and Zhang, Zheng and Lin, Stephen and Guo, Baining},
+  booktitle={Proceedings of the IEEE/CVF international conference on computer vision},
+  pages={10012--10022},
+  year={2021}
 }
 
-@book{peebles2001probability,
-  author     = {Peebles, Jr, Peyton Z.},
-  title      = {Probability, Random Variables, and Random Signal Principles},
-  edition    = {4},
-  address    = {New York},
-  publisher  = {McGraw Hill},
-  year       = {2001},
+@inproceedings{liu2022swin,
+  title={Swin transformer v2: Scaling up capacity and resolution},
+  author={Liu, Ze and Hu, Han and Lin, Yutong and Yao, Zhuliang and Xie, Zhenda and Wei, Yixuan and Ning, Jia and Cao, Yue and Zhang, Zheng and Dong, Li and others},
+  booktitle={Proceedings of the IEEE/CVF conference on computer vision and pattern recognition},
+  pages={12009--12019},
+  year={2022}
 }
 
-@incollection{baishunong1998zhiwu,
-  author     = {白书农},
-  title      = {植物开花研究},
-  editor     = {李承森},
-  booktitle  = {植物科学进展},
-  address    = {北京},
-  publisher  = {高等教育出版社},
-  year       = {1998},
-  pages      = {146--163},
-  key        = {bai2 shu1 nong2},
+@misc{zhao2024opendit,
+  author = {Xuanlei Zhao, Zhongkai Zhao, Ziming Liu, Haotian Zhou, Qianli Ma, and Yang You},
+  title = {OpenDiT: An Easy, Fast and Memory-Efficient System for DiT Training and Inference},
+  year = {2024},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/NUS-HPC-AI-Lab/OpenDiT}},
 }
 
-@incollection{weinstein1974pathogenic,
-  author     = {Weinstein, L and Swertz, M N},
-  title      = {Pathogenic Properties of Invading Microorganism},
-  editor     = {Sodeman, Jr, William A and Sodeman, William A},
-  booktitle  = {Pathologic physiology: mechanisms of disease},
-  address    = {Philadelphia},
-  publisher  = {Saunders},
-  year       = {1974},
-  pages      = {745--772},
+@misc{zhao2024dsp,
+      title={DSP: Dynamic Sequence Parallelism for Multi-Dimensional Transformers},
+      author={Xuanlei Zhao and Shenggan Cheng and Zangwei Zheng and Zheming Yang and Ziming Liu and Yang You},
+      year={2024},
+      eprint={2403.10266},
+      archivePrefix={arXiv},
+      primaryClass={cs.DC}
 }
 
-@inproceedings{hanjiren1985lun,
-  author     = {韩吉人},
-  title      = {论职工教育的特点},
-  editor     = {中国职工教育研究会},
-  booktitle  = {职工教育研究论文集},
-  address    = {北京},
-  publisher  = {人民教育出版社},
-  year       = {1985},
-  pages      = {90--99},
-  key        = {han2 ji2 ren2},
+@inproceedings{chen2018tvm,
+author = {Chen, Tianqi and Moreau, Thierry and Jiang, Ziheng and Zheng, Lianmin and Yan, Eddie and Cowan, Meghan and Shen, Haichen and Wang, Leyuan and Hu, Yuwei and Ceze, Luis and Guestrin, Carlos and Krishnamurthy, Arvind},
+title = {TVM: an automated end-to-end optimizing compiler for deep learning},
+year = {2018},
+isbn = {9781931971478},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {There is an increasing need to bring machine learning to a wide diversity of hardware devices. Current frameworks rely on vendor-specific operator libraries and optimize for a narrow range of server-class GPUs. Deploying workloads to new platforms - such as mobile phones, embedded devices, and accelerators (e.g., FPGAs, ASICs) - requires significant manual effort. We propose TVM, a compiler that exposes graph-level and operator-level optimizations to provide performance portability to deep learning workloads across diverse hardware back-ends. TVM solves optimization challenges specific to deep learning, such as high-level operator fusion, mapping to arbitrary hardware primitives, and memory latency hiding. It also automates optimization of low-level programs to hardware characteristics by employing a novel, learning-based cost modeling method for rapid exploration of code optimizations. Experimental results show that TVM delivers performance across hardware back-ends that are competitive with state-of-the-art, hand-tuned libraries for low-power CPU, mobile GPU, and server-class GPUs. We also demonstrate TVM's ability to target new accelerator back-ends, such as the FPGA-based generic deep learning accelerator. The system is open sourced and in production use inside several major companies.},
+booktitle = {Proceedings of the 13th USENIX Conference on Operating Systems Design and Implementation},
+pages = {579–594},
+numpages = {16},
+location = {Carlsbad, CA, USA},
+series = {OSDI'18}
 }
 
-@periodical{dizhi1936dizhi,
-  author     = {中国地质学会},
-  title      = {地质评论},
-  year       = {1936},
-  volume     = {1},
-  number     = {1},
-  address    = {北京},
-  publisher  = {地质出版社},
-  key        = {zhong1 guo2 di4 zhi3 xue2 hui4},
+@inproceedings{jia2019taso,
+author = {Jia, Zhihao and Padon, Oded and Thomas, James and Warszawski, Todd and Zaharia, Matei and Aiken, Alex},
+title = {TASO: optimizing deep learning computation with automatic generation of graph substitutions},
+year = {2019},
+isbn = {9781450368735},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3341301.3359630},
+doi = {10.1145/3341301.3359630},
+abstract = {Existing deep neural network (DNN) frameworks optimize the computation graph of a DNN by applying graph transformations manually designed by human experts. This approach misses possible graph optimizations and is difficult to scale, as new DNN operators are introduced on a regular basis.We propose TASO, the first DNN computation graph optimizer that automatically generates graph substitutions. TASO takes as input a list of operator specifications and generates candidate substitutions using the given operators as basic building blocks. All generated substitutions are formally verified against the operator specifications using an automated theorem prover. To optimize a given DNN computation graph, TASO performs a cost-based backtracking search, applying the substitutions to find an optimized graph, which can be directly used by existing DNN frameworks.Our evaluation on five real-world DNN architectures shows that TASO outperforms existing DNN frameworks by up to 2.8X, while requiring significantly less human effort. For example, TensorFlow currently contains approximately 53,000 lines of manual optimization rules, while the operator specifications needed by TASO are only 1,400 lines of code.},
+booktitle = {Proceedings of the 27th ACM Symposium on Operating Systems Principles},
+pages = {47–62},
+numpages = {16},
+keywords = {computation graph substitutions, deep neural network, formal verification, superoptimization},
+location = {Huntsville, Ontario, Canada},
+series = {SOSP '19}
 }
 
-@periodical{tushuguan1957tushuguanxue,
-  author     = {中国图书馆学会},
-  title      = {图书馆学通讯},
-  year       = {1957/1990},
-  number     = {1--4},
-  address    = {北京},
-  publisher  = {北京图书馆},
-  key        = {zhong1 guo2 tu2 shu1 guan3 xue2 hui4},
+@inproceedings {wang2021pet,
+author = {Haojie Wang and Jidong Zhai and Mingyu Gao and Zixuan Ma and Shizhi Tang and Liyan Zheng and Yuanzhi Li and Kaiyuan Rong and Yuanyong Chen and Zhihao Jia},
+title = {{PET}: Optimizing Tensor Programs with Partially Equivalent Transformations and Automated Corrections},
+booktitle = {15th USENIX Symposium on Operating Systems Design and Implementation (OSDI 21)},
+year = {2021},
+isbn = {978-1-939133-22-9},
+pages = {37--54},
+url = {https://www.usenix.org/conference/osdi21/presentation/wang},
+publisher = {USENIX Association},
+address = "Virtual",
+month = jul
 }
 
-@periodical{aaas1883science,
-  author     = {{American Association for the Advancement of Science}},
-  title      = {Science},
-  year       = {1883},
-  volume     = {1},
-  number     = {1},
-  address    = {Washington, D.C.},
-  publisher  = {American Association for the Advancement of Science},
+@inproceedings{tang2022freetensor,
+author = {Tang, Shizhi and Zhai, Jidong and Wang, Haojie and Jiang, Lin and Zheng, Liyan and Yuan, Zhenhao and Zhang, Chen},
+title = {FreeTensor: a free-form DSL with holistic optimizations for irregular tensor programs},
+year = {2022},
+isbn = {9781450392655},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3519939.3523448},
+doi = {10.1145/3519939.3523448},
+abstract = {Tensor programs are of critical use in many domains. Existing frameworks, such as PyTorch, TensorFlow, and JAX, adopt operator-based programming to ease programming, increase performance, and perform automatic differentiation. However, as the rapid development of tensor programs, operator-based programming shows significant limitations for irregular patterns since a large amount of redundant computation or memory access is introduced. In this work, we propose FreeTensor, a free-form domain specific language which supports redundancy-avoid programming by introducing fine-grained control flow. With optimizations including partial evaluation, dependence-aware transformations, and fine-grained automatic differentiation, FreeTensor is able to generate high performance tensor programs on both CPU and GPU. Experiments show a speedup over existing tensor programming frameworks up to 5.10 \texttimes{} (2.08 \texttimes{} on average) without differentiation, and up to 127.74 \texttimes{} (36.26 \texttimes{} on average) after differentiation, for typical irregular tensor programs.},
+booktitle = {Proceedings of the 43rd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
+pages = {872–887},
+numpages = {16},
+keywords = {tensor computing, optimizing compilers, DSL},
+location = {San Diego, CA, USA},
+series = {PLDI 2022}
 }
 
-@newspaper{fugang2000fengsha,
-  author     = {傅刚 and 赵承 and 李佳路},
-  title      = {大风沙过后的思考},
-  journal    = {北京青年报},
-  year       = {2000},
-  date       = {2000-04-12},
-  number     = {14},
-  urldate    = {2002-03-06},
-  url        = {http://www.bjyouth.com.cn/Bqb/20000412/B/4216%5ED0412B1401.htm},
-  key        = {fu4 gang1},
+@inproceedings{hu2024korch,
+author = {Hu, Muyan and Venkatram, Ashwin and Biswas, Shreyashri and Marimuthu, Balamurugan and Hou, Bohan and Oliaro, Gabriele and Wang, Haojie and Zheng, Liyan and Miao, Xupeng and Zhai, Jidong and Jia, Zhihao},
+title = {Optimal Kernel Orchestration for Tensor Programs with Korch},
+year = {2024},
+isbn = {9798400703867},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3620666.3651383},
+doi = {10.1145/3620666.3651383},
+abstract = {Kernel orchestration is the task of mapping the computation defined in different operators of a deep neural network (DNN) to the execution of GPU kernels on modern hardware platforms. Prior approaches optimize kernel orchestration by greedily applying operator fusion, which fuses the computation of multiple operators into a single kernel, and miss a variety of optimization opportunities in kernel orchestration.This paper presents Korch, a tensor program optimizer that discovers optimal kernel orchestration strategies for tensor programs. Instead of directly fusing operators, Korch first applies operator fission to decompose tensor operators into a small set of basic tensor algebra primitives. This decomposition enables a diversity of fine-grained, inter-operator optimizations. Next, Korch optimizes kernel orchestration by formalizing it as a constrained optimization problem, leveraging an off-the-shelf binary linear programming solver to discover an optimal orchestration strategy, and generating an executable that can be directly deployed on modern GPU platforms. Evaluation on a variety of DNNs shows that Korch outperforms existing tensor program optimizers by up to 1.7\texttimes{} on V100 GPUs and up to 1.6\texttimes{} on A100 GPUs. Korch is publicly available at https://github.com/humuyan/Korch.},
+booktitle = {Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 3},
+pages = {755–769},
+numpages = {15},
+keywords = {tensor program, kernel orchestration, machine learning compiler},
+location = {La Jolla, CA, USA},
+series = {ASPLOS '24}
 }
 
-@online{xiaoyu2001chubanye,
-  author     = {萧钰},
-  title      = {出版业信息化迈入快车道},
-  year       = {2001},
-  date       = {2001-12-19},
-  urldate    = {2002-04-15},
-  url        = {http://www.creader.com/news/20011219/200112190019.htm},
-  key        = {xiao1 yu4},
+
+@inproceedings {zheng2023einnet,
+author = {Liyan Zheng and Haojie Wang and Jidong Zhai and Muyan Hu and Zixuan Ma and Tuowei Wang and Shuhong Huang and Xupeng Miao and Shizhi Tang and Kezhao Huang and Zhihao Jia},
+title = {{EINNET}: Optimizing Tensor Programs with {Derivation-Based} Transformations},
+booktitle = {17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23)},
+year = {2023},
+isbn = {978-1-939133-34-2},
+address = {Boston, MA},
+pages = {739--755},
+url = {https://www.usenix.org/conference/osdi23/presentation/zheng},
+publisher = {USENIX Association},
+month = jul
 }
 
-@online{oclc2000about,
-  author     = {{Online Computer Library Center, Inc}},
-  title      = {About {OCLC}: History of Cooperation},
-  year       = {2000},
-  urldate    = {2000-01-08},
-  url        = {http://www.oclc.org/about/cooperation.en.htm},
+@misc{wu2024mirage,
+      title={Mirage: A Multi-Level Superoptimizer for Tensor Programs}, 
+      author={Mengdi Wu and Xinhao Cheng and Shengyu Liu and Chunan Shi and Jianan Ji and Kit Ao and Praveen Velliengiri and Xupeng Miao and Oded Padon and Zhihao Jia},
+      year={2024},
+      eprint={2405.05751},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2405.05751}, 
 }
 
-@software{scitor2000project,
-  author     = {{Scitor Corporation}},
-  title      = {Project scheduler},
-  address    = {Sunnyvale, Calif.},
-  publisher  = {Scitor Corporation},
-  year       = {1983},
-  medium     = {DK},
+@inproceedings{vaswani2017attention,
+ author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, \L ukasz and Polosukhin, Illia},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Attention is All you Need},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf},
+ volume = {30},
+ address = "Long Beach, California, USA",
+ year = {2017}
+}
+
+
+
+@techreport{chetlur2014cudnn,
+  title={cudnn: Efficient primitives for deep learning},
+  author={Chetlur, Sharan and Woolley, Cliff and Vandermersch, Philippe and Cohen, Jonathan and Tran, John and Catanzaro, Bryan and Shelhamer, Evan},
+  journal={arXiv preprint arXiv:1410.0759},
+  institution={NVIDIA},
+  year={2014}
+}
+
+@inproceedings{tillet2019triton,
+author = {Tillet, Philippe and Kung, H. T. and Cox, David},
+title = {Triton: an intermediate language and compiler for tiled neural network computations},
+year = {2019},
+isbn = {9781450367196},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3315508.3329973},
+doi = {10.1145/3315508.3329973},
+abstract = {The validation and deployment of novel research ideas in the field of Deep Learning is often limited by the availability of efficient compute kernels for certain basic primitives. In particular, operations that cannot leverage existing vendor libraries (e.g., cuBLAS, cuDNN) are at risk of facing poor device utilization unless custom implementations are written by experts – usually at the expense of portability. For this reason, the development of new programming abstractions for specifying custom Deep Learning workloads at a minimal performance cost has become crucial. We present Triton, a language and compiler centered around the concept of tile, i.e., statically shaped multi-dimensional sub-arrays. Our approach revolves around (1) a C-based language and an LLVM-based intermediate representation (IR) for expressing tensor programs in terms of operations on parametric tile variables and (2) a set of novel tile-level optimization passes for compiling these programs into efficient GPU code. We demonstrate how Triton can be used to build portable implementations of matrix multiplication and convolution kernels on par with hand-tuned vendor libraries (cuBLAS / cuDNN), or for efficiently implementing recent research ideas such as shift convolutions.},
+booktitle = {Proceedings of the 3rd ACM SIGPLAN International Workshop on Machine Learning and Programming Languages},
+pages = {10–19},
+numpages = {10},
+keywords = {neural networks, compiler, GPU},
+location = {Phoenix, AZ, USA},
+series = {MAPL 2019}
+}
+
+@inproceedings{shao2022metaschedule,
+author = {Shao, Junru and Zhou, Xiyou and Feng, Siyuan and Hou, Bohan and Lai, Ruihang and Jin, Hongyi and Lin, Wuwei and Masuda, Masahiro and Yu, Cody Hao and Chen, Tianqi},
+title = {Tensor program optimization with probabilistic programs},
+year = {2024},
+isbn = {9781713871088},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {Automatic optimization for tensor programs becomes increasingly important as we deploy deep learning in various environments, and efficient optimization relies on a rich search space and effective search. Most existing efforts adopt a search space which lacks the ability to efficiently enable domain experts to grow the search space. This paper introduces MetaSchedule, a domain-specific probabilistic programming language abstraction to construct a rich search space of tensor programs. Our abstraction allows domain experts to analyze the program, and easily propose stochastic choices in a modular way to compose program transformation accordingly. We also build an end-to-end learning-driven framework to find an optimized program for a given search space. Experimental results show that MetaSchedule can cover the search space used in the state-of-the-art tensor program optimization frameworks in a modular way. Additionally, it empowers domain experts to conveniently grow the search space and modularly enhance the system, which brings 48\% speedup on end-to-end deep learning workloads.},
+booktitle = {Proceedings of the 36th International Conference on Neural Information Processing Systems},
+articleno = {2593},
+numpages = {14},
+location = {New Orleans, LA, USA},
+series = {NIPS '22}
+}
+
+@inproceedings{chen2018autotvm,
+author = {Chen, Tianqi and Zheng, Lianmin and Yan, Eddie and Jiang, Ziheng and Moreau, Thierry and Ceze, Luis and Guestrin, Carlos and Krishnamurthy, Arvind},
+title = {Learning to optimize tensor programs},
+year = {2018},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {We introduce a learning-based framework to optimize tensor programs for deep learning workloads. Efficient implementations of tensor operators, such as matrix multiplication and high dimensional convolution, are key enablers of effective deep learning systems. However, current systems rely on manually optimized libraries, e.g., cuDNN, that support only a narrow range of server class GPUs. Such reliance limits the applicability of high-level graph optimizations and incurs significant engineering costs when deploying to new hardware targets. We use learning to remove this engineering burden. We learn domain-specific statistical cost models to guide the search of tensor operator implementations over billions of possible program variants. We further accelerate the search using effective model transfer across workloads. Experimental results show that our framework delivers performance that is competitive with state-of-the-art hand-tuned libraries for low-power CPUs, mobile GPUs, and server-class GPUs.},
+booktitle = {Proceedings of the 32nd International Conference on Neural Information Processing Systems},
+pages = {3393–3404},
+numpages = {12},
+location = {Montr\'{e}al, Canada},
+series = {NIPS'18}
+}
+
+
+@inproceedings{zheng2020ansor,
+author = {Zheng, Lianmin and Jia, Chengfan and Sun, Minmin and Wu, Zhao and Yu, Cody Hao and Haj-Ali, Ameer and Wang, Yida and Yang, Jun and Zhuo, Danyang and Sen, Koushik and Gonzalez, Joseph E. and Stoica, Ion},
+title = {Ansor: generating high-performance tensor programs for deep learning},
+year = {2020},
+isbn = {978-1-939133-19-9},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {High-performance tensor programs are crucial to guarantee efficient execution of deep neural networks. However, obtaining performant tensor programs for different operators on various hardware platforms is notoriously challenging. Currently, deep learning systems rely on vendor-provided kernel libraries or various search strategies to get performant tensor programs. These approaches either require significant engineering effort to develop platform-specific optimization code or fall short of finding high-performance programs due to restricted search space and ineffective exploration strategy.We present Ansor, a tensor program generation framework for deep learning applications. Compared with existing search strategies, Ansor explores many more optimization combinations by sampling programs from a hierarchical representation of the search space. Ansor then fine-tunes the sampled programs with evolutionary search and a learned cost model to identify the best programs. Ansor can find high-performance programs that are outside the search space of existing state-of-the-art approaches. In addition, Ansor utilizes a task scheduler to simultaneously optimize multiple subgraphs in deep neural networks. We show that Ansor improves the execution performance of deep neural networks relative to the state-of-the-art on the Intel CPU, ARM CPU, and NVIDIA GPU by up to 3.8\texttimes{}, 2.6\texttimes{}, and 1.7\texttimes{}, respectively.},
+booktitle = {Proceedings of the 14th USENIX Conference on Operating Systems Design and Implementation},
+articleno = {49},
+numpages = {17},
+series = {OSDI'20}
+}
+
+
+@misc{tensorrt,
+  author = {NVIDIA TensorRT},
+  note = "\url{https://developer.nvidia.com/tensorrt}",
+  year = {2017},
+}
+
+@misc{cublas,
+  author = {NVIDIA cuBLAS},
+  note = "\url{https://developer.nvidia.com/cublas}",
+  year = {2016},
+}
+
+@misc{onnx,
+  author = {ONNX},
+  year = {2020},
+  note = "\url{https://onnx.ai/}",
+}
+
+@article{harris2020numpy,
+  author       = {Charles R. Harris and
+                  K. Jarrod Millman and
+                  St{\'{e}}fan van der Walt and
+                  Ralf Gommers and
+                  Pauli Virtanen and
+                  David Cournapeau and
+                  Eric Wieser and
+                  Julian Taylor and
+                  Sebastian Berg and
+                  Nathaniel J. Smith and
+                  Robert Kern and
+                  Matti Picus and
+                  Stephan Hoyer and
+                  Marten H. van Kerkwijk and
+                  Matthew Brett and
+                  Allan Haldane and
+                  Jaime Fern{\'{a}}ndez del R{\'{\i}}o and
+                  Mark Wiebe and
+                  Pearu Peterson and
+                  Pierre G{\'{e}}rard{-}Marchant and
+                  Kevin Sheppard and
+                  Tyler Reddy and
+                  Warren Weckesser and
+                  Hameer Abbasi and
+                  Christoph Gohlke and
+                  Travis E. Oliphant},
+  title        = {Array Programming with NumPy},
+  journal      = {CoRR},
+  volume       = {abs/2006.10256},
+  year         = {2020},
+  url          = {https://arxiv.org/abs/2006.10256},
+  eprinttype    = {arXiv},
+  eprint       = {2006.10256},
+  timestamp    = {Sat, 30 Sep 2023 10:08:25 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-2006-10256.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inbook{pytorch19,
+author = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and K\"{o}pf, Andreas and Yang, Edward and DeVito, Zach and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+title = {PyTorch: an imperative style, high-performance deep learning library},
+year = {2019},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {Deep learning frameworks have often focused on either usability or speed, but not both. PyTorch is a machine learning library that shows that these two goals are in fact compatible: it provides an imperative and Pythonic programming style that supports code as a model, makes debugging easy and is consistent with other popular scientific computing libraries, while remaining efficient and supporting hardware accelerators such as GPUs.In this paper, we detail the principles that drove the implementation of PyTorch and how they are reflected in its architecture. We emphasize that every aspect of PyTorch is a regular Python program under the full control of its user. We also explain how the careful and pragmatic implementation of the key components of its runtime enables them to work together to achieve compelling performance. We demonstrate the efficiency of individual subsystems, as well as the overall speed of PyTorch on several common benchmarks.},
+booktitle = {Proceedings of the 33rd International Conference on Neural Information Processing Systems},
+chapter = {721},
+pages = {12},
+articleno = {721},
+numpages = {12}
+}
+
+@inproceedings{katharopoulos2020transformers,
+author = {Katharopoulos, Angelos and Vyas, Apoorv and Pappas, Nikolaos and Fleuret, Fran\c{c}ois},
+title = {Transformers are RNNs: fast autoregressive transformers with linear attention},
+year = {2020},
+publisher = {JMLR.org},
+abstract = {Transformers achieve remarkable performance in several tasks but due to their quadratic complexity, with respect to the input's length, they are prohibitively slow for very long sequences. To address this limitation, we express the self-attention as a linear dot-product of kernel feature maps and make use of the associativity property of matrix products to reduce the complexity from O(N2) to O(N), where N is the sequence length. We show that this formulation permits an iterative implementation that dramatically accelerates autoregressive transformers and reveals their relationship to recurrent neural networks. Our linear transformers achieve similar performance to vanilla transformers and they are up to 4000x faster on autoregressive prediction of very long sequences.},
+booktitle = {Proceedings of the 37th International Conference on Machine Learning},
+articleno = {478},
+numpages = {10},
+series = {ICML'20}
+}
+
+@article{lattner2020mlir,
+  author       = {Chris Lattner and
+                  Jacques A. Pienaar and
+                  Mehdi Amini and
+                  Uday Bondhugula and
+                  River Riddle and
+                  Albert Cohen and
+                  Tatiana Shpeisman and
+                  Andy Davis and
+                  Nicolas Vasilache and
+                  Oleksandr Zinenko},
+  title        = {{MLIR:} {A} Compiler Infrastructure for the End of Moore's Law},
+  journal      = {CoRR},
+  volume       = {abs/2002.11054},
+  year         = {2020},
+  url          = {https://arxiv.org/abs/2002.11054},
+  eprinttype    = {arXiv},
+  eprint       = {2002.11054},
+  timestamp    = {Thu, 14 Oct 2021 09:16:09 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-2002-11054.bib},
+  numpages = {21},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ragan2013halide,
+author = {Ragan-Kelley, Jonathan and Barnes, Connelly and Adams, Andrew and Paris, Sylvain and Durand, Fr\'{e}do and Amarasinghe, Saman},
+title = {Halide: a language and compiler for optimizing parallelism, locality, and recomputation in image processing pipelines},
+year = {2013},
+isbn = {9781450320146},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2491956.2462176},
+doi = {10.1145/2491956.2462176},
+abstract = {Image processing pipelines combine the challenges of stencil computations and stream programs. They are composed of large graphs of different stencil stages, as well as complex reductions, and stages with global or data-dependent access patterns. Because of their complex structure, the performance difference between a naive implementation of a pipeline and an optimized one is often an order of magnitude. Efficient implementations require optimization of both parallelism and locality, but due to the nature of stencils, there is a fundamental tension between parallelism, locality, and introducing redundant recomputation of shared values.We present a systematic model of the tradeoff space fundamental to stencil pipelines, a schedule representation which describes concrete points in this space for each stage in an image processing pipeline, and an optimizing compiler for the Halide image processing language that synthesizes high performance implementations from a Halide algorithm and a schedule. Combining this compiler with stochastic search over the space of schedules enables terse, composable programs to achieve state-of-the-art performance on a wide range of real image processing pipelines, and across different hardware architectures, including multicores with SIMD, and heterogeneous CPU+GPU execution. From simple Halide programs written in a few hours, we demonstrate performance up to 5x faster than hand-tuned C, intrinsics, and CUDA implementations optimized by experts over weeks or months, for image processing applications beyond the reach of past automatic compilers.},
+booktitle = {Proceedings of the 34th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+pages = {519–530},
+numpages = {12},
+keywords = {vectorization, redundant computation, parallelism, optimization, locality, image processing, gpu, domain specific language, compiler, autotuning},
+location = {Seattle, Washington, USA},
+series = {PLDI '13}
+}
+
+@article{bertsimas1993simulated,
+  title={Simulated annealing},
+  author={Bertsimas, Dimitris and Tsitsiklis, John},
+  journal={Statistical science},
+  volume={8},
+  number={1},
+  pages={10--15},
+  year={1993},
+  publisher={Institute of Mathematical Statistics}
+}
+
+@misc{team2024gemma2,
+      title={Gemma 2: Improving Open Language Models at a Practical Size}, 
+      author={Gemma Team and Morgane Riviere and Shreya Pathak and Pier Giuseppe Sessa and Cassidy Hardin and Surya Bhupatiraju and Léonard Hussenot and Thomas Mesnard and Bobak Shahriari and Alexandre Ramé and others},
+      year={2024},
+      eprint={2408.00118},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2408.00118}, 
+}
+
+
+@misc{flashinfer,
+  author = {FlashInfer},
+  year = {2024},
+  note = "\url{https://flashinfer.ai/}",
+}
+
+@article{shamshirband2021health,
+  title={A review on deep learning approaches in healthcare systems: Taxonomies, challenges, and open issues},
+  author={Shamshirband, Shahab and Fathi, Mahdis and Dehzangi, Abdollah and Chronopoulos, Anthony Theodore and Alinejad-Rokny, Hamid},
+  journal={Journal of Biomedical Informatics},
+  volume={113},
+  pages={103627},
+  year={2021},
+  publisher={Elsevier}
+}
+
+@article{li2024driving,
+  title={Improving efficiency of DNN-based relocalization module for autonomous driving with server-side computing},
+  author={Li, Dengbo and Zhang, Hanning and Cheng, Jieren and Liu, Bernie},
+  journal={Journal of Cloud Computing},
+  volume={13},
+  number={1},
+  pages={25},
+  year={2024},
+  publisher={Springer}
+}
+
+
+@inproceedings{torchcompile,
+author = {Ansel, Jason and Yang, Edward and He, Horace and Gimelshein, Natalia and Jain, Animesh and Voznesensky, Michael and Bao, Bin and Bell, Peter and Berard, David and Burovski, Evgeni and others},
+title = {PyTorch 2: Faster Machine Learning Through Dynamic Python Bytecode Transformation and Graph Compilation},
+year = {2024},
+isbn = {9798400703850},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3620665.3640366},
+doi = {10.1145/3620665.3640366},
+abstract = {This paper introduces two extensions to the popular PyTorch machine learning framework, TorchDynamo and TorchInductor, which implement the torch.compile feature released in PyTorch 2. TorchDynamo is a Python-level just-in-time (JIT) compiler that enables graph compilation in PyTorch programs without sacrificing the flexibility of Python. It achieves this by dynamically modifying Python bytecode before execution and extracting sequences of PyTorch operations into an FX graph, which is then JIT compiled using one of many extensible backends. TorchInductor is the default compiler backend for TorchDynamo, which translates PyTorch programs into OpenAI's Triton for GPUs and C++ for CPUs. Results show that TorchDynamo is able to capture graphs more robustly than prior approaches while adding minimal overhead, and TorchInductor is able to provide a 2.27\texttimes{} inference and 1.41\texttimes{} training geometric mean speedup on an NVIDIA A100 GPU across 180+ real-world models, which outperforms six other compilers. These extensions provide a new way to apply optimizations through compilers in eager mode frameworks like PyTorch.},
+booktitle = {Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 2},
+pages = {929–947},
+numpages = {19},
+location = {La Jolla, CA, USA},
+series = {ASPLOS '24}
+}
+
+@inproceedings{niu2021dnnfusion,
+author = {Niu, Wei and Guan, Jiexiong and Wang, Yanzhi and Agrawal, Gagan and Ren, Bin},
+title = {DNNFusion: accelerating deep neural networks execution with advanced operator fusion},
+year = {2021},
+isbn = {9781450383912},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3453483.3454083},
+doi = {10.1145/3453483.3454083},
+abstract = {Deep Neural Networks (DNNs) have emerged as the core enabler of many major applications on mobile devices. To achieve high accuracy, DNN models have become increasingly deep with hundreds or even thousands of operator layers, leading to high memory and computational requirements for inference. Operator fusion (or kernel/layer fusion) is key optimization in many state-of-the-art DNN execution frameworks, such as TensorFlow, TVM, and MNN, that aim to improve the efficiency of the DNN inference. However, these frameworks usually adopt fusion approaches based on certain patterns that are too restrictive to cover the diversity of operators and layer connections, especially those seen in many extremely deep models. Polyhedral-based loop fusion techniques, on the other hand, work on a low-level view of the computation without operator-level information, and can also miss potential fusion opportunities. To address this challenge, this paper proposes a novel and extensive loop fusion framework called DNNFusion. The basic idea of this work is to work at an operator view of DNNs, but expand fusion opportunities by developing a classification of both individual operators and their combinations. In addition, DNNFusion includes 1) a novel mathematical-property-based graph rewriting framework to reduce evaluation costs and facilitate subsequent operator fusion, 2) an integrated fusion plan generation that leverages the high-level analysis and accurate light-weight profiling, and 3) additional optimizations during fusion code generation. DNNFusion is extensively evaluated on 15 DNN models with varied types of tasks, model sizes, and layer counts. The evaluation results demonstrate that DNNFusion finds up to 8.8 \texttimes{} higher fusion opportunities, outperforms four state-of-the-art DNN execution frameworks with 9.3\texttimes{} speedup. The memory requirement reduction and speedups can enable the execution of many of the target models on mobile devices and even make them part of a real-time application.},
+booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
+pages = {883–898},
+numpages = {16},
+keywords = {Compiler Optimization, Deep Neural Network, Mobile Devices, Operator Fusion},
+location = {Virtual, Canada},
+series = {PLDI 2021}
+}
+
+@inproceedings{niu2024smartmem,
+author = {Niu, Wei and Sanim, Md Musfiqur Rahman and Shu, Zhihao and Guan, Jiexiong and Shen, Xipeng and Yin, Miao and Agrawal, Gagan and Ren, Bin},
+title = {SmartMem: Layout Transformation Elimination and Adaptation for Efficient DNN Execution on Mobile},
+year = {2024},
+isbn = {9798400703867},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3620666.3651384},
+doi = {10.1145/3620666.3651384},
+abstract = {This work is motivated by recent developments in Deep Neural Networks, particularly the Transformer architectures underlying applications such as ChatGPT, and the need for performing inference on mobile devices. Focusing on emerging transformers (specifically the ones with computationally efficient Swin-like architectures) and large models (e.g., Stable Diffusion and LLMs) based on transformers, we observe that layout transformations between the computational operators cause a significant slowdown in these applications. This paper presents SmartMem, a comprehensive framework for eliminating most layout transformations, with the idea that multiple operators can use the same tensor layout through careful choice of layout and implementation of operations. Our approach is based on classifying the operators into four groups, and considering combinations of producer-consumer edges between the operators. We develop a set of methods for searching such layouts. Another component of our work is developing efficient memory layouts for 2.5 dimensional memory commonly seen in mobile devices. Our experimental results show that SmartMem outperforms 5 state-of-the-art DNN execution frameworks on mobile devices across 18 varied neural networks, including CNNs, Transformers with both local and global attention, as well as LLMs. In particular, compared to DNNFusion, SmartMem achieves an average speedup of 2.8\texttimes{}, and outperforms TVM and MNN with speedups of 6.9\texttimes{} and 7.9\texttimes{}, respectively, on average.},
+booktitle = {Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 3},
+pages = {916–931},
+numpages = {16},
+location = {La Jolla, CA, USA},
+series = {ASPLOS '24}
+}
+
+
+@inproceedings {zheng2022sparta,
+author = {Ningxin Zheng and Bin Lin and Quanlu Zhang and Lingxiao Ma and Yuqing Yang and Fan Yang and Yang Wang and Mao Yang and Lidong Zhou},
+title = {{SparTA}: {Deep-Learning} Model Sparsity via {Tensor-with-Sparsity-Attribute}},
+booktitle = {16th USENIX Symposium on Operating Systems Design and Implementation (OSDI 22)},
+year = {2022},
+isbn = {978-1-939133-28-1},
+address = {Carlsbad, CA},
+pages = {213--232},
+url = {https://www.usenix.org/conference/osdi22/presentation/zheng-ningxin},
+publisher = {USENIX Association},
+month = jul
+}
+
+@misc{xla,
+	author = {TensorFlow XLA},
+	year = {2023},
+	Note = "\url{https://www.tensorflow.org/xla}",
+}
+
+@misc{flexattention,
+	author = {Pytorch FlexAttention},
+	year = {2024},
+	Note = "\url{https://pytorch.org/blog/flexattention/}",
+}
+
+@article{williams2009roofline,
+  title={Roofline: an insightful visual performance model for multicore architectures},
+  author={Williams, Samuel and Waterman, Andrew and Patterson, David},
+  journal={Communications of the ACM},
+  volume={52},
+  number={4},
+  pages={65--76},
+  year={2009},
+  publisher={ACM New York, NY, USA}
+}
+@inproceedings{astitch,
+author = {Zheng, Zhen and Yang, Xuanda and Zhao, Pengzhan and Long, Guoping and Zhu, Kai and Zhu, Feiwen and Zhao, Wenyi and Liu, Xiaoyong and Yang, Jun and Zhai, Jidong and Song, Shuaiwen Leon and Lin, Wei},
+title = {AStitch: Enabling a New Multi-Dimensional Optimization Space for Memory-Intensive ML Training and Inference on Modern SIMT Architectures},
+year = {2022},
+isbn = {9781450392051},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3503222.3507723},
+doi = {10.1145/3503222.3507723},
+abstract = {This work reveals that memory-intensive computation is a rising performance-critical factor in recent machine learning models. Due to a unique set of new challenges, existing ML optimizing compilers cannot perform efficient fusion under complex two-level dependencies combined with just-in-time demand. They face the dilemma of either performing costly fusion due to heavy redundant computation, or skipping fusion which results in massive number of kernels. Furthermore, they often suffer from low parallelism due to the lack of support for real-world production workloads with irregular tensor shapes. To address these rising challenges, we propose AStitch, a machine learning optimizing compiler that opens a new multi-dimensional optimization space for memory-intensive ML computations. It systematically abstracts four operator-stitching schemes while considering multi-dimensional optimization objectives, tackles complex computation graph dependencies with novel hierarchical data reuse, and efficiently processes various tensor shapes via adaptive thread mapping. Finally, AStitch provides just-in-time support incorporating our proposed optimizations for both ML training and inference. Although AStitch serves as a stand-alone compiler engine that is portable to any version of TensorFlow, its basic ideas can be generally applied to other ML frameworks and optimization compilers. Experimental results show that AStitch can achieve an average of 1.84x speedup (up to 2.73x) over the state-of-the-art Google's XLA solution across five production workloads. We also deploy AStitch onto a production cluster for ML workloads with thousands of GPUs. The system has been in operation for more than 10 months and saves about 20,000 GPU hours for 70,000 tasks per week.},
+booktitle = {Proceedings of the 27th ACM International Conference on Architectural Support for Programming Languages and Operating Systems},
+pages = {359–373},
+numpages = {15},
+keywords = {Compiler Optimization, Fusion, Machine Learning, Memory-Intensive Computation},
+location = {Lausanne, Switzerland},
+series = {ASPLOS '22}
+}
+
+@inproceedings {shi2023welder,
+author = {Yining Shi and Zhi Yang and Jilong Xue and Lingxiao Ma and Yuqing Xia and Ziming Miao and Yuxiao Guo and Fan Yang and Lidong Zhou},
+title = {Welder: Scheduling Deep Learning Memory Access via Tile-graph},
+booktitle = {17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23)},
+year = {2023},
+isbn = {978-1-939133-34-2},
+address = {Boston, MA},
+pages = {701--718},
+url = {https://www.usenix.org/conference/osdi23/presentation/shi},
+publisher = {USENIX Association},
+month = jul
+}
+
+
+@inproceedings{zhang2024infinitebench,
+    title = "$\infty${B}ench: Extending Long Context Evaluation Beyond 100{K} Tokens",
+    author = "Zhang, Xinrong  and
+      Chen, Yingfa  and
+      Hu, Shengding  and
+      Xu, Zihang  and
+      Chen, Junhao  and
+      Hao, Moo  and
+      Han, Xu  and
+      Thai, Zhen  and
+      Wang, Shuo  and
+      Liu, Zhiyuan  and
+      Sun, Maosong",
+    editor = "Ku, Lun-Wei  and
+      Martins, Andre  and
+      Srikumar, Vivek",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-long.814/",
+    doi = "10.18653/v1/2024.acl-long.814",
+    pages = "15262--15277",
+    abstract = "Processing and reasoning over long contexts is crucial for many practical applications of Large Language Models (LLMs), such as document comprehension and agent construction. Despite recent strides in making LLMs process contexts with more than 100K tokens, there is currently a lack of a standardized benchmark to evaluate this long-context capability. Existing public benchmarks typically focus on contexts around 10K tokens, limiting the assessment and comparison of LLMs in processing longer contexts. In this paper, we propose , the first LLM benchmark featuring an average data length surpassing 100K tokens. comprises synthetic and realistic tasks spanning diverse domains in English and Chinese. The tasks in are designed to require an understanding of long dependencies in contexts and make simply retrieving a limited number of passages from contexts not sufficient for these tasks. Based on , we evaluate several state-of-the-art LLMs tailored for processing long contexts. The experimental results indicate that existing long-context LLMs still require significant advancements to process 100K+ contexts effectively. Furthermore, we present three intriguing analyses regarding the behavior of LLMs processing long context. Our code and data is released."
 }

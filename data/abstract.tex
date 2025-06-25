@@ -3,37 +3,39 @@
 % 中英文摘要和关键字
 
 \begin{abstract}
-  论文的摘要是对论文研究内容和成果的高度概括。
-  摘要应对论文所研究的问题及其研究目的进行描述，对研究方法和过程进行简单介绍，对研究成果和所得结论进行概括。
-  摘要应具有独立性和自明性，其内容应包含与论文全文同等量的主要信息。
-  使读者即使不阅读全文，通过摘要就能了解论文的总体内容和主要成果。
+  随着人工智能技术飞速发展，大模型已广泛应用于语音识别、自然语言处理、图像识别等领域。
+  人工智能后训练进一步提升基座大模型在法律、医疗、金融等专业领域的能力，是扩大应用领域的重要手段。
+  然而，现有后训练系统由于算子计算效率低、内存使用率不足以及数据传输开销大等问题，往往需要大量的计算资源和时间，限制了领域模型的实际应用。
+  围绕上述挑战，本文在人工智能后训练性能优化方面开展了深入研究，主要贡献包括：
 
-  论文摘要的书写应力求精确、简明。
-  切忌写成对论文书写内容进行提要的形式，尤其要避免“第 1 章……；第 2 章……；……”这种或类似的陈述方式。
-
-  关键词是为了文献标引工作、用以表示全文主要内容信息的单词或术语。
-  关键词不超过 5 个，每个关键词中间用分号分隔。
+  1. 针对算子计算效率低的问题，提出了基于细粒度张量属性的算子编译优化方法 FlashTensor，通过识别和利用归约维度等细粒度张量属性，扩大优化空间，搜索更优的算子拆分与融合方案，提升了算子执行效率。
+  实验表明，与最先进的方法相比，FlashTensor 在 H100 上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍。
+  
+  2. 针对内存使用率不足的问题，提出了基于弹性张量的大模型微调内存优化方法 MTuner，通过动态调整固定权重和动态激活值的内存分配策略，优化了内存布局，降低了内存峰值，从而提升整体训练效率。
+  
+  3. 针对数据传输开销大的问题，提出了基于轻量级上下文切换的后训练通信优化方法 Puzzle，通过优化生存、推理和训练不同阶段的并行策略与数据传输方式，减少了通信量，降低了通信成本。
 
   % 关键词用“英文逗号”分隔，输出时会自动处理为正确的分隔符
   \thusetup{
-    keywords = {关键词 1, 关键词 2, 关键词 3, 关键词 4, 关键词 5},
+    keywords = {人工智能系统, 后训练, 编译优化, 内存优化, 通信优化},
   }
 \end{abstract}
 
 \begin{abstract*}
-  An abstract of a dissertation is a summary and extraction of research work and contributions.
-  Included in an abstract should be description of research topic and research objective, brief introduction to methodology and research process, and summary of conclusion and contributions of the research.
-  An abstract should be characterized by independence and clarity and carry identical information with the dissertation.
-  It should be such that the general idea and major contributions of the dissertation are conveyed without reading the dissertation.
+  With the rapid development of artificial intelligence technology, large models have been widely applied in fields such as speech recognition, natural language processing, and image recognition.
+  Post-training further enhances the capabilities of base large models in professional fields such as law, medicine, and finance, and it is an important method to expand the application scope.
+  However, due to low operator calculation efficiency, insufficient memory utilization, and high data transmission cost, existing post-training systems often require a large amount of computing resources and time, which restricts the practical application of domain models.
+  In this report, we conduct in-depth research on the performance optimization of artificial intelligence post-training. 
+  The main contributions are as follows:
 
-  An abstract should be concise and to the point.
-  It is a misunderstanding to make an abstract an outline of the dissertation and words “the first chapter”, “the second chapter” and the like should be avoided in the abstract.
+  1. To address the problem of low operator calculation efficiency, an operator compilation optimization method named FlashTensor based on fine-grained tensor properties is proposed. By identifying and utilizing fine-grained tensor properties such as reduction dimensions, it expands the optimization space, searches for better operator splitting and fusion schemes, and improves the operator execution efficiency.
 
-  Keywords are terms used in a dissertation for indexing, reflecting core information of the dissertation.
-  An abstract may contain a maximum of 5 keywords, with semi-colons used in between to separate one another.
+  2. In response to the problem of insufficient memory utilization, an MTuner method for memory optimization of large model fine-tuning based on elastic tensors is proposed. Through dynamically adjusting the memory allocation strategies of fixed weights and dynamic activation values, it optimizes the memory layout and reduces the memory peak, thereby improving the overall training efficiency.
 
+  3. Regarding the problem of high data transmission overhead, a post-training communication optimization method named Puzzle based on lightweight context switching is proposed. By optimizing the parallel strategies and data transmission methods in different stages of survival, inference, and training, it reduces the communication volume and lowers the communication cost.
+  
   % Use comma as separator when inputting
   \thusetup{
-    keywords* = {keyword 1, keyword 2, keyword 3, keyword 4, keyword 5},
+    keywords* = {Artificial Intelligence System, Post-Training, Compilation Optimization, Memory Optimization, Communication Optimization},
   }
 \end{abstract*}

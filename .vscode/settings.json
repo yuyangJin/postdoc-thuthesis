@@ -1,103 +1,132 @@
 {
-    "latex-workshop.latex.recipes": [
-        {
-            "name": "latexmk (xelatex)",
-            "tools": [
-                "unpack-thuthesis",
-                "xelatexmk"
-            ]
-        },
-        {
-            "name": "latexmk (lualatex)",
-            "tools": [
-                "unpack-thuthesis",
-                "lualatexmk"
-            ]
-        },
-        {
-            "name": "make thesis",
-            "tools": [
-                "make-thesis"
-            ]
-        }
-    ],
+
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.showContextMenu": true,
+    "latex-workshop.intellisense.package.enabled": true,
+    "latex-workshop.message.error.show": false,
+    "latex-workshop.message.warning.show": false,
+
+    // "latex.linter.enabled": false,
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.showContextMenu": true,
+    "latex-workshop.intellisense.package.enabled": true,
+    "latex-workshop.message.error.show": false,
+    "latex-workshop.message.warning.show": false,
     "latex-workshop.latex.tools": [
         {
-            "name": "unpack-thuthesis",
-            "command": "xetex",
+            "name": "xelatex",
+            "command": "xelatex",
             "args": [
-                "-file-line-error",
-                "-halt-on-error",
+                "-synctex=1",
                 "-interaction=nonstopmode",
-                "thuthesis.ins"
-            ],
-            "env": {}
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
         },
         {
-            "name": "xelatexmk",
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "latexmk",
             "command": "latexmk",
             "args": [
-                "-xelatex",
-                "-file-line-error",
-                "-halt-on-error",
-                "-interaction=nonstopmode",
                 "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
                 "-outdir=%OUTDIR%",
-                "%DOC%"
-            ],
-            "env": {}
+                "%DOCFILE%"
+            ]
         },
         {
-            "name": "lualatexmk",
-            "command": "latexmk",
+            "name": "bibtex",
+            "command": "bibtex",
             "args": [
-                "-lualatex",
-                "-file-line-error",
-                "-halt-on-error",
-                "-interaction=nonstopmode",
-                "-synctex=1",
-                "-outdir=%OUTDIR%",
-                "%DOC%"
-            ],
-            "env": {}
-        },
-        {
-            "name": "make-thesis",
-            "command": "make",
-            "args": [],
-            "env": {}
+                "%DOCFILE%"
+            ]
         }
     ],
-    "latex-workshop.latex.watch.files.ignore": [
-        "**/thuthesis.cls",
-        "**/*.bbx",
-        "**/*.bbl",
-        "**/*.cbx",
-        "**/*.cfg",
-        "**/*.clo",
-        "**/*.cnf",
-        "**/*.def",
-        "**/*.dfu",
-        "**/*.enc",
-        "**/*.fd",
-        "**/*.fmt",
-        "**/*.lbx",
-        "**/*.map",
-        "**/*.mkii",
-        "**/*.pfb",
-        "**/*.tfm",
-        "**/*.vf",
-        "**/*.code.tex",
-        "**/*.sty",
-        "**/texmf-{dist,var}/**",
-        "**/Local/MiKTeX/**",
-        "**/Local/Programs/MiKTeX/**",
-        "**/Roaming/MiKTeX/**",
-        "**/Program*/MiKTeX*/**",
-        "**/.miktex/texmfs/**",
-        "/var/cache/miktex-texmf/**",
-        "/usr/local/share/miktex-texmf/**",
-        "**/Library/Application Support/MiKTeX/texmfs/**",
-        "/dev/null"
-    ]
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "XeLaTeX",
+            "tools": [
+                "xelatex"
+            ]
+        },
+        {
+            "name": "PDFLaTeX",
+            "tools": [
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "BibTeX",
+            "tools": [
+                "bibtex"
+            ]
+        },
+        {
+            "name": "LaTeXmk",
+            "tools": [
+                "latexmk"
+            ]
+        },
+                {
+            "name": "xelatex -> bibtex -> xelatex*2",
+            "tools": [
+                "xelatex",
+                "bibtex",
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            "name": "pdflatex -> bibtex -> pdflatex*2",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        },
+    ],
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.acn",
+        "*.acr",
+        "*.alg",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.ist",
+        "*.fls",
+        "*.log",
+        "*.fdb_latexmk"
+    ],
+    "latex-workshop.latex.autoClean.run": "onFailed",
+    "latex-workshop.latex.recipe.default": "lastUsed",
+    "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
+    "editor.unicodeHighlight.allowedLocales": {
+        "zh-hans": true,
+        "zh-hant": true
+    },
+    "[latex]": {
+    
+        "editor.defaultFormatter": "James-Yu.latex-workshop"
+    }
 }

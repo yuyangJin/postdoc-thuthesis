@@ -21,9 +21,8 @@
   % 标题
   %   可使用“\\”命令手动控制换行
   %
-  title  = {清华大学学位论文 \LaTeX{} 模板\\使用示例文档 v\version},
-  title* = {An Introduction to \LaTeX{} Thesis Template of Tsinghua
-            University v\version},
+  title  = {人工智能后训练的性能优化\\关键技术研究},
+  title* = {Research on Key Technologies of Performance Optimization for Artificial Intelligence Post-Training},
   %
   % 学科门类
   %   1. 学术型
@@ -67,8 +66,8 @@
   %
   % 姓名
   %
-  author  = {薛瑞尼},
-  author* = {Xue Ruini},
+  author  = {金煜阳},
+  author* = {Jin Yuyang},
   %
   % 学号
   % 仅当书写开题报告时需要（同时设置 `thesis-type = proposal'）
@@ -78,13 +77,13 @@
   % 指导教师
   %   中文姓名和职称之间以英文逗号“,”分开，下同
   %
-  supervisor  = {郑纬民, 教授},
-  supervisor* = {Professor Zheng Weimin},
+  supervisor  = {翟季冬, 教授},
+  supervisor* = {Professor Zhai Jidong},
   %
   % 副指导教师
   %
-  associate-supervisor  = {陈文光, 教授},
-  associate-supervisor* = {Professor Chen Wenguang},
+  % associate-supervisor  = {陈文光, 教授},
+  % associate-supervisor* = {Professor Chen Wenguang},
   %
   % 联合指导教师
   %
@@ -108,12 +107,12 @@
   %
   % 博士后专有部分
   %
-  % clc                = {分类号},
-  % udc                = {UDC},
-  % id                 = {编号},
-  % discipline-level-1 = {计算机科学与技术},  % 流动站（一级学科）名称
-  % discipline-level-2 = {系统结构},          % 专业（二级学科）名称
-  % start-date         = {2011-07-01},        % 研究工作起始时间
+  clc                = {},
+  udc                = {},
+  id                 = {},
+  discipline-level-1 = {计算机科学与技术},  % 流动站（一级学科）名称
+  discipline-level-2 = {系统结构},          % 专业（二级学科）名称
+  start-date         = {2022-07-11},        % 研究工作起始时间
 }
 
 % 载入所需的宏包
@@ -196,3 +195,18 @@
 
 % hyperref 宏包在最后调用
 \usepackage{hyperref}
+
+% Cref
+\usepackage{cleveref}
+% \crefformat{section}{\S#2#1#3}
+% \crefformat{subsection}{\S#2#1#3}
+\crefformat{chapter}{第#1章}
+\crefformat{section}{#1节}
+\crefformat{subsection}{#1节}
+\crefformat{figure}{图#1}
+\crefformat{table}{表#1}
+\crefformat{algorithm}{算法#1}
+\crefrangeformat{section}{#1节}
+\crefrangeformat{subsection}{#1节}
+% \crefrangeformat{section}{\S#2#1#3}
+% \crefrangeformat{subsection}{\S#2#1#3}

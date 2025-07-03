@@ -1,39 +1,39 @@
 % !TeX root = ../thuthesis-example.tex
 
-\chapter{基于细粒度张量属性的计算优化}
+\chapter{基于细粒度张量属性的算子编译优化}
 
 \label{chap:flashtensor}
 
 \section{概述}
 
-% 深度神经网络（DNN）在自然语言处理和视频应用等领域展现出了显著的有效性。然而，DNN 模型，尤其是针对长上下文任务的模型，会产生极其庞大的中间张量，造成巨大的内存开销。尽管人们在优化 DNN 方面付出了大量努力，但对张量属性的认识不足阻碍了有效的内存优化，并可能导致长上下文场景下的计算效率低下。
+% 深度神经网络(DNN)在自然语言处理和视频应用等领域展现出了显著的有效性。然而，DNN 模型，尤其是针对长上下文任务的模型，会产生极其庞大的中间张量，造成巨大的内存开销。尽管人们在优化 DNN 方面付出了大量努力，但对张量属性的认识不足阻碍了有效的内存优化，并可能导致长上下文场景下的计算效率低下。
 % \section{引言}
 
-% 在本文中，我们介绍了 FlashTensor，这是一个 DNN 优化系统，通过利用细粒度张量属性来减少内存开销并提高推理性能。我们首先从计算图中提取和识别关键的张量属性，如归约依赖和广播能力等。然后，基于这些属性应用包括变换和内核映射在内的多种优化方法。在七个模型上进行的实验表明，与八种最先进的方法相比，FlashTensor 在 H100 上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍（在 A100 上为 1.86 倍和 3.70 倍）。
+% 在本文中，我们介绍了 FlashTensor，这是一个 DNN 优化系统，通过利用细粒度张量属性来减少内存开销并提高推理性能。我们首先从计算图中提取和识别关键的张量属性，如归约依赖和广播能力等。然后，基于这些属性应用包括变换和内核映射在内的多种优化方法。在七个模型上进行的实验表明，与八种最先进的方法相比，FlashTensor 在 H100 上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍(在 A100 上为 1.86 倍和 3.70 倍)。
 
 人工智能应用已经成为推动图像识别、自然语言处理、视频生成等众多领域变革的核心力量~\cite{radford2018gpt, radford2019gpt2, brown2020gpt3, achiam2023gpt4, touvron2023llama, touvron2023llama2, roziere2023codellama, MosaicML2023mpt30b, jiang2023mistralv1, peng2023yarn}。
 人工智能模型的后训练，通过领域相关数据进一步将基座模型训练为领域专用模型，赋予了这些模型特定领域的知识和能力，使其能够在特定任务上表现更加出色。
 
 然而，随着人工智能的广泛应用，这些领域模型训练对计算能力和资源的需求急剧增加，带来了一系列严峻挑战。
 具体地，后训练中的模型计算量呈现出显著的增长趋势。主要分为两个方面：
-1）\textit{模型参数增长}（P 维度）：主要与基座模型的隐藏层大小相关，扩大隐藏层大小有助于提升推理结果的质量；
-2）\textit{输入数据长度增长}（I 维度）：主要包括序列长度和图像大小等维度，增加这些维度的大小可使模型处理更广泛的领域相关输入信息。
+1){模型参数增长}(P 维度)：主要与基座模型的隐藏层大小相关，扩大隐藏层大小有助于提升推理结果的质量；
+2){输入数据长度增长}(I 维度)：主要包括序列长度和图像大小等维度，增加这些维度的大小可使模型处理更广泛的领域相关输入信息。
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\linewidth]{figures/flashtensor/intro_workload-crop.pdf}
+    \includegraphics[width=0.85\linewidth]{figures/flashtensor/intro_workload-crop.pdf}
     % \vspace{-2em}
-    \caption{(a) P维度（P-axis）和I维度（I-axis）的增长不同. (b) 注意力变体示例~\cite{zhang2024h2o}.}
+    \caption{模型张量增长情况与注意力变体示例}
     % \vspace{-1.5em}
     \label{fig:flashtensor-larger_workload}
 \end{figure}
 
 经调研总结，本文发现这两个方面的增长速度存在明显差异。
-例如，从 Llama-65B 到 Llama-3.1-405B~\cite{touvron2023llama, touvron2023llama2, dubey2024llama3}，P维度（隐藏层大小）从 8k 增加到 16k，仅增长了 2 倍；
-而 I 维度（上下文长度）从 2k 扩展到 128k，增长了 64 倍，如\Cref{fig:flashtensor-larger_workload}(a)所示。
+例如，从 Llama-65B 到 Llama-3.1-405B~\cite{touvron2023llama, touvron2023llama2, dubey2024llama3}，P维度(隐藏层大小)从 8k 增加到 16k，仅增长了 2 倍；
+而 I 维度(上下文长度)从 2k 扩展到 128k，增长了 64 倍，如\Cref{fig:flashtensor-larger_workload}(a)所示。
 不同轴的增长速度差异导致模型中间张量的大小与形状出现显著变化。
-\Cref{fig:flashtensor-larger_workload}(b)展示了注意力变体的一个简化部分计算图，其中包含一个矩阵乘法（MatMul）操作，
-随后是两个不同归约方向的归约（Reduce）操作。
+\Cref{fig:flashtensor-larger_workload}(b)展示了注意力变体的一个简化部分计算图，其中包含一个矩阵乘法(MatMul)操作，
+随后是两个不同归约方向的归约(Reduce)操作。
 当 P 维度和 I 维度的大小相近时，MatMul 操作的输入和输出形状相似；
 但在当前 P 维度和 I 维度大小差异巨大的情况下，MatMul 的输出相比计算中涉及的其他张量变得极其庞大。
 这些巨大的张量需要耗费大量的处理时间，其计算效率对整体性能至关重要。
@@ -44,7 +44,7 @@
 如果进行融合，两个 Reduce 算子因不同归约维度导致的复杂依赖关系会降低并行性，大幅降低性能。
 了解流经计算图边的中间张量的属性，如上述对特定轴的归约依赖，对于找到算子图的高效解决方案至关重要，更多有用的张量属性类型将在后文讨论。
 
-在现有工作中，一方面，手动开发与优化算子库的研究~\cite{dao2022flashattention, dao2023flashattention, shah2024flashattention, flashinfer}虽然能够带来相对极致的性能，但无法涵盖层出不穷的众多新型模型结构变体。
+在现有工作中，一方面，手动开发与优化算子库的研究~\cite{dao2022flashattention, dao2023flashattention, shah2024flashattention, ye2025flashinfer}虽然能够带来相对极致的性能，但无法涵盖层出不穷的众多新型模型结构变体。
 另一方面，深度学习编译器~\cite{niu2021dnnfusion, astitch, shi2023welder}具备自动优化能力，但大多考虑张量大小、算子类型等相对粗粒度张量属性，往往忽略归约方向等细粒度张量属性，丢失了针对长序列场景下的深度优化机会。
 
 本研究提出了 FlashTensor，通过利用细粒度张量属性来优化长序列后训练场景下的算子性能。
@@ -61,10 +61,9 @@
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\linewidth]{figures/flashtensor/motivation_example_h2o_overview.pdf}
+    \includegraphics[width=0.7\linewidth]{figures/flashtensor/motivation_example_h2o_overview-crop.pdf}
     % \vspace{-1.7em}
-    \caption{\(H_{2}O\) 示例。绿色算子是与 Vanilla Attention 相比的额外算子。Reduce 1和MatMul 1对同一大张量的不同维度进行归约。
-    }
+    \caption{\(H_{2}O\) 模型示例}
     % \vspace{-2em}
     \label{fig:flashtensor-motivation_example_h2o_overview}
 \end{figure}
@@ -75,18 +74,18 @@
 然而，传统的注意力机制在处理长上下文时会产生巨大的内存开销和计算量，尤其是在输入序列长度显著增加时。
 在模型算法测，近期的一个研究热点是使用新的注意力变体来减少传统注意力机制的大量计算。
 例如，\(H_{2}O\)~\cite{zhang2024h2o}、RoCo~\cite{ren2024roco} 和 Keyformer~\cite{adnan2024keyformer} 等模型可以丢弃一些不重要词元的数据以减少总计算量。
-以\(H_{2}O\)为例（见\Cref{fig:flashtensor-motivation_example_h2o_overview}），它在 SoftMax（由 Exp、Reduce 0 和 Div 组成）之后使用一个额外的 Reduce 算子（Reduce 1）来计算词元的重要性，然后通过 TopK 算子结合 Gather 算子，选择并缓存最重要的词元数据，同时丢弃其余词元数据。
+以\(H_{2}O\)为例(见\Cref{fig:flashtensor-motivation_example_h2o_overview})，它在 SoftMax(由 Exp、Reduce 0 和 Div 组成)之后使用一个额外的 Reduce 算子(Reduce 1)来计算词元的重要性，然后通过 TopK 算子结合 Gather 算子，选择并缓存最重要的词元数据，同时丢弃其余词元数据。
 
-\(H_{2}O\)在后训练的推理过程时，包括两个阶段：预填充阶段（Prefill）和解码阶段（Decode）。
+\(H_{2}O\)在后训练的推理过程时，包括两个阶段：预填充阶段(Prefill)和解码阶段(Decode)。
 在预填充阶段，输入提示会被逐块处理，重要的词元会被选择并缓存数据，特别是当输入超过缓存容量时；
 在解码阶段，输出词元数据会依次生成，并且在选择和保留最重要的词元数据时，缓存会进一步更新。
 因此，新增的算子会影响预填充阶段和解码阶段的性能。
 然而，对于长上下文文档摘要等任务，预填充阶段成为显著的性能瓶颈。
 例如，在 InfiniteBench~\cite{zhang2024infinitebench} 中，提示的词元数可达 442K，而生成的词元数仅为 0.7K，相差 631 倍，导致\(H_{2}O\)中预填充与解码的执行时间比达到 4.51。
-主要瓶颈源于预填充阶段核心模块中创建的大张量（见\Cref{fig:flashtensor-motivation_example_h2o_overview}），该张量由 MatMul 0 产生，大小为\(O(seqlen ^{2})\)，导致大量的内存访问开销。
-即使经过 TensorRT~\cite{tensorrt} 优化，\(H_{2}O\)的核心模块仍约占预填充总时间的 57.62\%，但计算性能仅达到 10.77 TFLOP/s（仅为 A100 F16 TensorCore 峰值性能的 3.45\%）。
+主要瓶颈源于预填充阶段核心模块中创建的大张量(见\Cref{fig:flashtensor-motivation_example_h2o_overview})，该张量由 MatMul 0 产生，大小为\(O(seqlen ^{2})\)，导致大量的内存访问开销。
+即使经过 TensorRT~\cite{tensorrt} 优化，\(H_{2}O\)的核心模块仍约占预填充总时间的 57.62\%，但计算性能仅达到 10.77 TFLOP/s(仅为 A100 F16 TensorCore 峰值性能的 3.45\%)。
 
-关键挑战在于 MatMul 1 和 Reduce 1 这两个归约操作，它们对 Div 的输出张量（DivOut）具有不同的归约维度。为了提高效率，DivOut 的每一行必须分配到相同的并行单元用于 MatMul 1 操作，每一列也必须位于单个并行单元内。因此，除了使用单个并行单元外，没有其他可行的 DivOut 分区策略能满足这些约束。结果，像 TensorRT 这样的现有方法必须通过缓慢的全局内存跨多个内核处理大张量。此外，这两个具有不同归约维度的归约算子是\(H_{2}O\)与传统注意力机制的主要区别，由于这些结构差异，FlashAttention~\cite{dao2023flashattention} 难以对\(H_{2}O\)进行优化，其局限性源于缺乏对细粒度张量属性（如每个维度的归约依赖）的感知，从而错失了将 MatMul 1 与之前算子融合以避免访问大张量的机会。
+关键挑战在于 MatMul 1 和 Reduce 1 这两个归约操作，它们对 Div 的输出张量(DivOut)具有不同的归约维度。为了提高效率，DivOut 的每一行必须分配到相同的并行单元用于 MatMul 1 操作，每一列也必须位于单个并行单元内。因此，除了使用单个并行单元外，没有其他可行的 DivOut 分区策略能满足这些约束。结果，像 TensorRT 这样的现有方法必须通过缓慢的全局内存跨多个内核处理大张量。此外，这两个具有不同归约维度的归约算子是\(H_{2}O\)与传统注意力机制的主要区别，由于这些结构差异，FlashAttention~\cite{dao2023flashattention} 难以对\(H_{2}O\)进行优化，其局限性源于缺乏对细粒度张量属性(如每个维度的归约依赖)的感知，从而错失了将 MatMul 1 与之前算子融合以避免访问大张量的机会。
 
 \section{系统概述}
 
@@ -101,7 +100,7 @@
 \item 
 \textbf{归约依赖}：归约依赖指的是张量的某些维度是否会被聚合或归约，这对于分析算子的潜在并行机会至关重要。
 如前所述，在\Cref{fig:flashtensor-motivation_example_h2o_overview}中，Div 的输出张量存在两个方向的归约依赖。
-Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，MatMul 1 无法在列维度上并行化，这使得整个计算图难以并行化。
+Reduce 1 无法在行维度上进行跨流式多处理器(SM)并行化，MatMul 1 无法在列维度上并行化，这使得整个计算图难以并行化。
 识别这种归约依赖对于避免次优的并行化模式并寻找最优策略至关重要。
 \item
 \textbf{广播}：广播是指张量的维度被扩展或广播以匹配另一个张量的形状。
@@ -117,9 +116,9 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{figures/flashtensor/motivation_example_dependency_and_value.pdf}
+    \includegraphics[width=0.7\linewidth]{figures/flashtensor/motivation_example_dependency_and_value-crop.pdf}
     % \vspace{-2em}
-    \caption{\(H_{2}O\)模型中的广播示例。 对\textit{MatMul 0} 与\textit{Mul}重排序可减少中间张量大小.}
+    \caption{\(H_{2}O\)模型中的广播示例}
     % \vspace{-1.7em}
     \label{fig:dependency_and_broadcast_example}
 \end{figure}
@@ -128,14 +127,14 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 基于上述观察，本研究提出了考虑这些细粒度张量属性的 FlashTensor。
 如研究动机部分所述，FlashTensor 专注于优化长上下文任务的瓶颈——预填充阶段。
 \Cref{fig:flashtensor-overview}展示了 FlashTensor 的总体架构，它主要由两个模块组成：张量属性识别器和张量属性感知优化器。
-首先，张量属性识别器模块将张量程序作为输入（以计算图表示，节点表示算子，边表示张量），并捕获计算图中每个张量的所有细粒度属性，包括归约依赖、广播、大小和值。
+首先，张量属性识别器模块将张量程序作为输入(以计算图表示，节点表示算子，边表示张量)，并捕获计算图中每个张量的所有细粒度属性，包括归约依赖、广播、大小和值。
 然后，张量属性感知优化器模块根据图变换规则和内核映射策略搜索最优方案。
 图变换规则旨在在特定限制下减小中间张量的大小，内核映射策略则通过考虑内存访问、计算强度和并行性来寻找高效的候选内核。
 最终生成优化后的张量程序，可作为高效代码执行。
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\linewidth]{figures/flashtensor/overview-ft-crop.pdf}
+    \includegraphics[width=0.7\linewidth]{figures/flashtensor/overview-crop.pdf}
     % \vspace{-1.5em}
     \caption{FlashTensor系统设计}
     % \vspace{-2em}
@@ -151,12 +150,12 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 
 \subsection{属性定义}
 如\Cref{tab:property}所示，张量属性分为两个不同类别：
-1）\textit{逐维属性}：张量单个维度的特定属性，提供有关归约依赖和广播能力等方面的信息；
-2）\textit{整体张量属性}：涵盖描述整个张量的属性，如总大小和可能的常数值。
+1){逐维属性}：张量单个维度的特定属性，提供有关归约依赖和广播能力等方面的信息；
+2){整体张量属性}：涵盖描述整个张量的属性，如总大小和可能的常数值。
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
-\footnotesize
+% \footnotesize
 \caption{FlashTensor中的张量属性}
 % \vspace{-0.5em}
 \begin{tabular}{p{1.4cm}<{\centering}cp{4.2cm}}
@@ -172,7 +171,7 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 \multirow{2}{*}{\makecell{广播}} & No & 未广播维度 \\
                            & Yes & 已广播维度 \\
 \hline
-\multicolumn{3}{c}{\textbf{整个张量属性}} \\
+\multicolumn{3}{c}{\textbf{整体张量属性}} \\
 \hline
 \makecell{大小} & 整数 & 张量的总大小 \\
 \hline
@@ -200,9 +199,9 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\linewidth]{figures/flashtensor/property_definition_dependency.pdf}
+    \includegraphics[width=0.7\linewidth]{figures/flashtensor/property_definition_dependency-crop.pdf}
     % \vspace{-1.9em}
-    \caption{Reduce dependency property}
+    \caption{归约依赖属性}
     % \vspace{-1.5em}
     \label{fig:property_definition_dependency}
 \end{figure}
@@ -213,9 +212,9 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 \begin{figure}[ht]
     \centering
     % \includegraphics[width=0.93\linewidth]{figures/property_definition_broadcast-crop.pdf}
-    \includegraphics[width=0.7\linewidth]{figures/flashtensor/property_definition_broadcast-crop.pdf}
+    \includegraphics[width=0.65\linewidth]{figures/flashtensor/property_definition_broadcast-crop.pdf}
     % \vspace{-1em}
-    \caption{Broadcast property}
+    \caption{广播属性}
     % \vspace{-1.5em}
     \label{fig:property_definition_broadcast}
 \end{figure}
@@ -234,9 +233,9 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figures/flashtensor/property_definition_size_and_value.pdf}
+    \includegraphics[width=0.52\linewidth]{figures/flashtensor/property_definition_size_and_value-crop.pdf}
     % \vspace{-0.7em}
-    \caption{Size and value property}
+    \caption{大小和值属性}
     % \vspace{-2em}
     \label{fig:property_definition_size_and_value}
 \end{figure}
@@ -278,30 +277,30 @@ Reduce 1 无法在行维度上进行跨流式多处理器（SM）并行化，Mat
 % \end{table}
 
 \subsection{基于数据流的属性识别}
-一些基本属性（如大小）可以很容易地从张量中提取，但像归约依赖这样的复杂属性则需要复杂的分析才能准确标注。
+一些基本属性(如大小)可以很容易地从张量中提取，但像归约依赖这样的复杂属性则需要复杂的分析才能准确标注。
 例如，在单个算子中，即使不完全实现算子，也可以根据其计算语义简单标注输入和输出张量的归约依赖，如\Cref{fig:property_definition_dependency}所示。
 然而，在包含多个算子的计算图中，张量的归约依赖属性会受到后续和前面算子的影响，难以确定其确切值。
 
 为解决这个问题，本研究提出了一种基于两阶段数据流的属性识别算法：
 1) \textbf{属性传播}：根据每个算子的计算语义，张量属性进行前向和后向传播。
 2) \textbf{属性聚合}：将从各个算子传播来的属性进行聚合，以确定每个张量的最终属性值。
-该算法利用固有的单调优先级（例如，归约依赖类型：NonPara > Reuse > Batch）。
+该算法利用固有的单调优先级(例如，归约依赖类型：NonPara > Reuse > Batch)。
 当不同类型的属性在同一张量维度上汇聚时，保留优先级较高的值，以确保在整个图中准确表示属性。
 这些阶段会迭代执行，直到属性稳定。
 \Cref{fig:identification_merge}给出了归约依赖识别的示例以进一步说明。\Cref{fig:identification_merge}(b)展示了 MatMul 的输出如何通过后向传播将右侧操作数在 N’维度上的归约依赖从 Reuse 更新为 NonPara；\Cref{fig:identification_merge}(a)展示了 MatMul 和 Reduce 之间的属性聚合过程，中间张量从两个算子接收不同的归约依赖值。
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/flashtensor/identification_merge-crop.pdf}
+    \includegraphics[width=0.7\linewidth]{figures/flashtensor/identification_merge-crop.pdf}
     % \vspace{-1.5em}
-    \caption{Example for reduce dependency identification. Forward propagation is similar to the backward one. $+$ means the operation that produces value with higher priority.}
+    \caption{归约依赖属性识别示例}
     % \vspace{-1em}
     \label{fig:identification_merge}
 \end{figure}
 
 \section{细粒度张量属性感知优化}
 FlashTensor 基于识别出的细粒度张量属性进一步优化张量程序。
-优化基于两个规则（代数等价图变换和非凸内核映射）以及一种轻量级方案搜索方法。
+优化基于两个规则(代数等价图变换和非凸内核映射)以及一种轻量级方案搜索方法。
 代数等价图变换提供一系列变换规则，允许通过等价变换改变中间张量的大小；
 非凸内核映射提出一种新的候选内核以实现高效执行；
 轻量级方案搜索通过属性约束剪枝和低成本性能模型实现高效的方案生成。
@@ -309,21 +308,12 @@ FlashTensor 基于识别出的细粒度张量属性进一步优化张量程序�
 \subsection{代数等价图变换}
 中间张量的大小是决定内存访问开销的主要因素。
 因此，本研究提出一种变换方法，主要通过对计算图进行代数等价变换来关注中间张量大小的变化，这使得后续能够在整个搜索空间中寻找中间张量大小最小的计算图，从而减少内存开销。
-\textit{广播是导致中间张量大小变化的本质原因}。
+{广播是导致中间张量大小变化的本质原因}。
 
-\begin{figure}[h]
-    \centering
-    % \includegraphics[width=0.8\linewidth]{figures/wo_broadcast-crop.pdf}
-    \includegraphics[width=\linewidth]{figures/flashtensor/wo_broadcast-crop.pdf}
-    % \vspace{-0.7em}
-    \caption{\textit{MatMul} and \textit{Div} with conditioned validity for reorder}
-    % \vspace{-1.3em}
-    \label{fig:wo_broadcast}
-\end{figure}
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
-    \caption{基于广播属性的转换规则。$A$、$B$ 和 $C$ 为张量。$+$、$\odot$ 和 $/$ 分别为逐元素加、乘和除。$AB$ 表示 $A$ 和 $B$ 的矩阵乘法。除矩阵乘法外的所有运算符均支持广播。}
+    \caption{基于广播属性的转换规则}
     % \vspace{-0.5em}
     % \footnotesize
     \begin{tabular}{ccc}
@@ -359,19 +349,32 @@ FlashTensor 基于识别出的细粒度张量属性进一步优化张量程序�
     \label{tab:broadcast_based_transform}
 \end{table}
 
-(1) \textbf{基于广播属性的变换规则}：本研究提出了一系列变换规则，这些规则不仅考虑张量大小，还考虑每个维度的广播属性。具体而言，\Cref{tab:broadcast_based_transform}列出了所有变换规则，可分为两大部分：
+
+
+
+(1) \textbf{基于广播属性的变换规则}：本研究提出了一系列变换规则，这些规则不仅考虑张量大小，还考虑每个维度的广播属性。具体而言，\Cref{tab:broadcast_based_transform}列出了所有变换规则。$A$、$B$ 和 $C$ 为张量。$+$、$\odot$ 和 $/$ 分别为逐元素加、乘和除。$AB$ 表示 $A$ 和 $B$ 的矩阵乘法。除矩阵乘法外的所有运算符均支持广播。主要规则可分为两大部分：
 始终有效的变换：无论操作数的广播属性如何，这些变换始终有效，其有效性由不同算子及其组合的交换律、结合律和分配律这三个数学定律保证。
+
+\begin{figure}[ht]
+    \centering
+    % \includegraphics[width=0.8\linewidth]{figures/wo_broadcast-crop.pdf}
+    \includegraphics[width=0.75\linewidth]{figures/flashtensor/wo_broadcast-crop.pdf}
+    % \vspace{-0.7em}
+    \caption{MatMul 与 Div 算子重排序示例}
+    % \vspace{-1.3em}
+    \label{fig:wo_broadcast}
+\end{figure}
 
 (2) \textbf{受广播属性约束的变换}：某些变换的有效性取决于广播属性。在这些变换中，广播被视为确保正确性的关键属性。例如，在\Cref{fig:wo_broadcast}(a)中，当 Div 的右侧操作数在 N 维度上广播时，重新排序是无效的，因为 MatMul 中的归约会破坏计算语义，导致结果错误；而在\Cref{fig:wo_broadcast}(b)中，如果 Div 的右侧操作数沿与 MatMul 归约维度对齐的维度广播，重新排序则是有效的。
 
-(3) \textbf{基于值属性的变换规则}：本研究利用值属性通过消除不必要的迭代来优化循环。具体而言，重点是在不影响最终输出的情况下跳过 For 循环中的某些迭代。如\Cref{fig:value_example}所示，某些迭代可能会从 Mask 算子产生常量值（如 -∞），由于这些常量值在 For 循环中保持不变地传播，FlashTensor可以识别并安全地跳过这些迭代，这不仅保持了输出的正确性，还减少了计算量。
+(3) \textbf{基于值属性的变换规则}：本研究利用值属性通过消除不必要的迭代来优化循环。具体而言，重点是在不影响最终输出的情况下跳过 For 循环中的某些迭代。如\Cref{fig:value_example}所示，某些迭代可能会从 Mask 算子产生常量值(如 -∞)，由于这些常量值在 For 循环中保持不变地传播，FlashTensor可以识别并安全地跳过这些迭代，这不仅保持了输出的正确性，还减少了计算量。
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     % \vspace{-1em}
-    \includegraphics[width=0.7\linewidth]{figures/flashtensor/value_example-crop.pdf}
+    \includegraphics[width=0.5\linewidth]{figures/flashtensor/value_example-crop.pdf}
     % \vspace{-1em}
-    \caption{Value example}
+    \caption{值属性示例}
     % \vspace{-1em}
     \label{fig:value_example}
 \end{figure}
@@ -384,16 +387,16 @@ FlashTensor 基于识别出的细粒度张量属性进一步优化张量程序�
 首先，本文给出最先进研究中内核的形式化定义。
 
 \vspace{0.5em}
-\begin{definition}[内核]：对于计算图\(G=(V, E)\)，如果不存在节点\(p_{1}, p_{2} \in K\)和另一个节点\(q \in V/K\)，使得\(p_{1} \stackrel{G}{\rightsquigarrow } q\)且\(q \stackrel{G}{\rightsquigarrow} p_{2}\)（其中\(x \stackrel{G}{\rightsquigarrow} y\)表示在\(G\)中存在从\(x\)到\(y\)的路径），则节点集\(K \subseteq V\)构成一个内核。
+\begin{definition}[内核] 对于计算图\(G=(V, E)\)，如果不存在节点\(p_{1}, p_{2} \in K\)和另一个节点\(q \in V/K\)，使得\(p_{1} \stackrel{G}{\rightsquigarrow } q\)且\(q \stackrel{G}{\rightsquigarrow} p_{2}\)(其中\(x \stackrel{G}{\rightsquigarrow} y\)表示在\(G\)中存在从\(x\)到\(y\)的路径)，则节点集\(K \subseteq V\)构成一个内核。
 \end{definition}
 \vspace{0.5em}
 
 该定义将计算图中的凸子集算子视为内核，凸性意味着这种内核不能包含通过外部算子依赖自身的算子，如\Cref{fig:kernel_def_diff}(a)所示。
-Korch~\cite{hu2024korch} 认为由于循环依赖（即 Div 依赖于 Reduce，Reduce 又依赖于 Exp），这样的内核无法执行，但这种循环依赖可以通过其他内核解决，具体而言，一个内核不必生成自身输入，只要有其他内核提供这些输入即可。
+Korch~\cite{hu2024korch} 认为由于循环依赖(即 Div 依赖于 Reduce，Reduce 又依赖于 Exp)，这样的内核无法执行，但这种循环依赖可以通过其他内核解决，具体而言，一个内核不必生成自身输入，只要有其他内核提供这些输入即可。
 例如，为解决\Cref{fig:kernel_def_diff}(a)中的循环依赖，包含 Exp 和 Reduce 的另一个内核可以提供输入，从而使包含 Div 的内核能够顺利执行。基于这一理解，本研究放宽了传统内核定义的限制，提出了非凸内核的概念。
 
 \vspace{0.5em}
-\begin{definition}（非凸内核）：对于计算图\(G=(V, E)\)，当且仅当存在一个存在节点\(p_{1}, p_{2} \in K\)和另一个节点\(q \in V/K\)，使得\(p_{1} \stackrel{G}{\rightsquigarrow } q\)且\(q \stackrel{G}{\rightsquigarrow} p_{2}\),节点集\(K \subseteq V\)构成一个非凸内核。
+\begin{definition}[非凸内核] 对于计算图\(G=(V, E)\)，当且仅当存在一个存在节点\(p_{1}, p_{2} \in K\)和另一个节点\(q \in V/K\)，使得\(p_{1} \stackrel{G}{\rightsquigarrow } q\)且\(q \stackrel{G}{\rightsquigarrow} p_{2}\),节点集\(K \subseteq V\)构成一个非凸内核。
 \end{definition}
 \vspace{0.5em}
 
@@ -403,12 +406,12 @@ Korch~\cite{hu2024korch} 认为由于循环依赖（即 Div 依赖于 Reduce，R
 同时，尽量减少内核之间的数据传输，以降低内存访问开销。
 例如，对于具有相似内存访问模式的算子，将它们映射到同一个内核中，可以减少内存访问的次数和延迟。
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     % \includegraphics[width=0.85\linewidth]{figures/kernel_def_diff-crop.pdf}
-    \includegraphics[width=0.6\linewidth]{figures/flashtensor/kernel_def_diff-crop.pdf}
+    \includegraphics[width=0.6\linewidth]{figures/flashtensor/kernel_identification-crop.pdf}
     % \vspace{-0.8em}
-    \caption{Examples for non-convex and convex kernels}
+    \caption{非凸内核与凸内核示例}
     % \vspace{-1.5em}
     \label{fig:kernel_def_diff}
 \end{figure}
@@ -430,9 +433,9 @@ Korch~\cite{hu2024korch} 认为由于循环依赖（即 Div 依赖于 Reduce，R
 
 
 整个搜索算法如\Cref {alg:kernel_identify}所示。
-该算法首先确定可用的并行执行单元数量，例如 GPU 流多处理器（SMs）的数量。
+该算法首先确定可用的并行执行单元数量，例如 GPU SM的数量。
 然后，遍历计算图的连通子集，筛选出并行度或算术强度低于性能阈值的内核。
-在筛选出候选内核后，本研究遵循先前的工作~\cite{hu2024korch}，将最优候选搜索形式化为一个二元线性规划（BLP）任务并求解。
+在筛选出候选内核后，本研究遵循先前的工作~\cite{hu2024korch}，将最优候选搜索形式化为一个二元线性规划任务并求解。
 
 \begin{algorithm}[ht]
 {
@@ -462,23 +465,23 @@ Korch~\cite{hu2024korch} 认为由于循环依赖（即 Div 依赖于 Reduce，R
 
 \section{实验评估}
 FlashTensor 基于 MLIR~\cite {lattner2020mlir} 和 Triton~\cite {tillet2019triton}，由 10K 行 C++ 代码和 2K 行 Python 代码实现。
-FlashTensor 以 ONNX 格式（可通过现有工具从原生 TensorFlow/PyTorch 程序轻松导出）为输入，并将其转换为有效的 MLIR 代码。
+FlashTensor 以 ONNX 格式(可通过现有工具从原生 TensorFlow/PyTorch 程序轻松导出)为输入，并将其转换为有效的 MLIR 代码。
 本研究在 MLIR 中实现了两种方言：FT 和 FTTriton。
-FT 定义了张量操作（如逐元素操作、归约、重塑和矩阵乘法）以及通过 MLIR passes 实现的相应转换；
+FT 定义了张量操作(如逐元素操作、归约、重塑和矩阵乘法)以及通过 MLIR passes 实现的相应转换；
 FTTriton 作为从 FT 到 Triton DSL 的桥梁，定义了与 Triton 类似的操作符。
 应用所有优化后，最终的 MLIR 代码将转换为有效的 Triton 代码，接入PyTorch算子后端。
 
 \subsection{实验设置}
 实验平台方面，本研究在配备 NVIDIA A100 和 H100 GPU 的服务器上进行实验，以评估 FlashTensor 的性能。
 具体为：
-1）一块 NVIDIA A100-PCIE-40GB GPU（配备两颗 AMD EPYC 7742 64 核 CPU）；
-2）一块 H100-PCIE-80GB GPU（配备 AMD EPYC 7453 28 核 CPU）。
+1)一块 NVIDIA A100-PCIE-40GB GPU(配备两颗 AMD EPYC 7742 64 核 CPU)；
+2)一块 H100-PCIE-80GB GPU(配备 AMD EPYC 7453 28 核 CPU)。
 软件版本为 Python 3.10、CUDA 12.1 和 GCC 12.2。
 
 评估模型方面，实验选取了七个具有代表性的模型，包括\(H_{2}O\)~\cite{zhang2024h2o}, RoCo~\cite{ren2024roco}, Keyformer~\cite{adnan2024keyformer}, SnapKV~\cite{li2024snapkv}, Corm~\cite{dai2024corm}, Vanilla Attention~\cite{vaswani2017attention} (V.A.), Gemma2~\cite{team2024gemma2}等新型注意力变体模型，以及一些传统基于 Transformer 的模型。
 这些模型涵盖了不同的应用场景和计算特点，能够全面地测试 FlashTensor 的优化效果。
 这些模型的简要描述如~\Cref {tab:model_description} 所示。
-在端到端实验中，所有模型均使用 \textit {Llama-2-7b}~\cite {touvron2023llama2} 作为基础模型，采用 FP16 精度权重、32 个注意力头和 128 的头维度。为保证公平比较，模型间唯一差异在于注意力模块设计。
+在端到端实验中，所有模型均使用  {Llama-2-7b}~\cite {touvron2023llama2} 作为基础模型，采用 FP16 精度权重、32 个注意力头和 128 的头维度。为保证公平比较，模型间唯一差异在于注意力模块设计。
 
 
 \begin{table}[ht]
@@ -510,60 +513,80 @@ FTTriton 作为从 FT 到 Triton DSL 的桥梁，定义了与 Triton 类似的�
 \end{table}
 
 对比系统方面，本研究将 FlashTensor 与八种最先进的深度学习优化方法进行对比。
-1) \textit{深度学习编译器}: PyTorch 2.2.2~\cite{pytorch19} and corresponding TorchInductor~\cite{torchcompile}, TensorRT 10.0.1~\cite{tensorrt},  TVM 0.16.0~\cite{chen2018tvm} with MetaScheduler~\cite{chen2018autotvm, zheng2020ansor}, Korch~\cite{hu2024korch}, 以及 EinNet~\cite{zheng2023einnet}. 
-2) \textit{高效算子库}: FlashAttention 2.6.2~\cite{dao2022flashattention, dao2023flashattention} 以及 FlashInfer 0.1.0~\cite{flashinfer}.
+1) {深度学习编译器}: PyTorch 2.2.2~\cite{pytorch19} and corresponding TorchInductor~\cite{torchcompile}, TensorRT 10.0.1~\cite{tensorrt},  TVM 0.16.0~\cite{chen2018tvm} with MetaScheduler~\cite{chen2018autotvm, zheng2020ansor}, Korch~\cite{hu2024korch}, 以及 EinNet~\cite{zheng2023einnet}. 
+2) {高效算子库}: FlashAttention 2.6.2~\cite{dao2022flashattention, dao2023flashattention} 以及 FlashInfer 0.1.0~\cite{ye2025flashinfer}.
 
 在实验过程中，本研究统一使用相同的数据集对所有模型进行推理测试，以确保实验结果的可比性。
 对于每个模型，本研究分别测量其端到端的推理时间以及核心模块的执行时间，并计算性能加速比。
 同时，本研究还记录了内存使用情况，以评估 FlashTensor 在减少内存开销方面的效果。
 
-\begin{figure*}[ht]
+% \begin{figure*}[ht]
+%     \centering
+%     \begin{minipage}[ht]{\textwidth}
+%         {\includegraphics[width=\linewidth]{figures/flashtensor/e2e-crop.pdf}}
+%         % \vspace{-1em}
+%     \end{minipage}
+%     \\
+%     \centering \small (a) End-to-end performance
+%     \begin{minipage}[ht]{\textwidth}
+%         {\includegraphics[width=\linewidth]{figures/flashtensor/kernel-crop.pdf}}
+%         % \vspace{-1em}
+%     \end{minipage}
+%     \\
+%     \centering \small (b) Core module performance
+%     % \vspace{-1em}
+%     \caption{End-to-end and core module performance comparison of seven evaluated models with SOTA systems on A100 and H100 GPU. NS means NotSupport. Bars for baselines of too long running time are truncated, and their execution times are marked on the bars. The numbers above FlashTensor's bars show FlashTensor's speedups over the best baseline.}
+%     % \vspace{-0.5em}
+%     \label{fig:e2e-kernel}
+% \end{figure*}
+
+\begin{figure}[ht]
     \centering
-    \begin{minipage}[ht]{\textwidth}
-        {\includegraphics[width=\linewidth]{figures/flashtensor/e2e-crop.pdf}}
-        % \vspace{-1em}
+    \begin{minipage}[t]{\textwidth}
+        \includegraphics[width=\linewidth]{figures/flashtensor/e2e-crop.pdf}
     \end{minipage}
-    \\
-    \centering \small (a) End-to-end performance
-    \begin{minipage}[ht]{\textwidth}
-        {\includegraphics[width=\linewidth]{figures/flashtensor/kernel-crop.pdf}}
-        % \vspace{-1em}
+    \vspace{-0.5em}
+    \caption*{\small (a) 端到端性能}
+    
+    \begin{minipage}[t]{\textwidth}
+        \includegraphics[width=\linewidth]{figures/flashtensor/kernel-crop.pdf}
     \end{minipage}
-    \\
-    \centering \small (b) Core module performance
-    % \vspace{-1em}
-    \caption{End-to-end and core module performance comparison of seven evaluated models with SOTA systems on A100 and H100 GPU. NS means NotSupport. Bars for baselines of too long running time are truncated, and their execution times are marked on the bars. The numbers above FlashTensor's bars show FlashTensor's speedups over the best baseline.}
-    % \vspace{-0.5em}
+    \vspace{-0.5em}
+    \caption*{\small (b) 核心模块性能}
+    \caption{端到端和核心模块性能对比(A100和H100 GPU上)}
     \label{fig:e2e-kernel}
-\end{figure*}
+\end{figure}
 
 \subsection{性能对比}
 
 本研究首先比较了 FlashTensor 模型与最先进的深度学习编译器的端到端推理性能。
-如 \Cref {fig:e2e-kernel}(a) 所示，FlashTensor 在 A100 上的加速比最高可达最佳基线的\(2.22\times\)，在 H100 上可达\(1.62\times\)。
+如\Cref {fig:e2e-kernel}所示，NS表示不支持，运行时间过长的基线柱状图被截断，其执行时间标注在柱状图上。
+FlashTensor柱状图上方的数字显示了FlashTensor相对于最佳基线的加速比。
+
+如\Cref {fig:e2e-kernel}(a) 所示，FlashTensor 在 A100 上的加速比最高可达最佳基线的\(2.22\times\)，在 H100 上可达\(1.62\times\)。
 FlashTensor 的性能提升主要来自高度优化的核心模块。
-\Cref {fig:e2e-kernel}(b) 展示了核心模块（如注意力变体）的性能，FlashTensor 在 A100 上的加速比最高达\(4.52\times\)，在 H100 上达\(5.43\times\)。
+\Cref {fig:e2e-kernel}(b) 展示了核心模块(如注意力变体)的性能，FlashTensor 在 A100 上的加速比最高达\(4.52\times\)，在 H100 上达\(5.43\times\)。
 
 本研究观察到部分模型结构相似，在 FlashTensor 下性能大致相当，但经最先进的深度学习编译器优化后，性能差异显著。
-例如，如~\Cref {fig:lib_cmp}(a) 所示，Gemma2 仅对标准注意力（V.A.）做了微小修改。
-使用 TensorRT 时，A100 上 Gemma2 和 V.A. 的推理时间分别为 5.13 和 2.25 毫秒——这种显著差距源于 TensorRT 针对 V.A. 的注意力结构预写了特定规则（类似 FlashAttention），但无法匹配 Gemma2 的微小修改结构。
+例如，如~\Cref {fig:lib_cmp}(a) 所示，Gemma2 仅对标准注意力(V.A.)做了微小修改，绿色算子为 Gemma2 的额外结构。
+使用 TensorRT 时，A100 上 Gemma2 和 V.A. 的推理时间分别为 5.13 和 2.25 毫秒——这种显著差距源于 TensorRT 针对 V.A. 的注意力结构预写了特定规则(类似 FlashAttention)，但无法匹配 Gemma2 的微小修改结构。
 而在 FlashTensor 中，A100 上 Gemma2 和 V.A. 的推理时间分别为 1.14 ms 和 1.20 ms，性能相当且超越 TensorRT。
 这是因为 FlashTensor 通过张量属性感知规则自动搜索最优方案，既能适配不同模型，又能利用值感知循环迭代消除技术，进一步减少因果掩码导致的不必要计算。
 
-\section{不同序列长度的可扩展性}
+\subsection{不同序列长度的可扩展性}
 \Cref{fig:seqlen_mem_flops} 展示了 \(H_{2}O\) 在不同序列长度下的计算效率和内存占用可扩展性。  
 \begin{figure}[ht]
     \centering
     % \vspace{-1.8em}
-    \includegraphics[width=\linewidth]{figures/flashtensor/gflops_mem-crop.pdf}
+    \includegraphics[width=0.7\linewidth]{figures/flashtensor/gflops_mem-crop.pdf}
     % \vspace{-1.7em}
-    \caption{H100 上 \(H_{2}O\) 在不同序列长度下的内存占用和 TFLOP/s（批量大小为 1）}
+    \caption{\(H_{2}O\) 在不同序列长度下的内存占用和 TFLOP/s}
     % \vspace{-0.5em}
     \label{fig:seqlen_mem_flops}
 \end{figure}
 
 计算效率方面，
-每秒浮点运算次数（FLOP/s）是衡量内核计算效率或吞吐量的重要指标。
+每秒浮点运算次数(FLOP/s)是衡量内核计算效率或吞吐量的重要指标。
 由于内存访问开销更低，FlashTensor 在序列长度较长时实现了更高的 FLOP/s。
 TorchInductor 和 TensorRT 采用相同的内核映射策略，需在 CUDA 内核中从全局内存读写大小为 $O(\text{seqlen}^2)$ 的中间张量，从而导致高内存开销。  
 
@@ -572,77 +595,100 @@ TorchInductor 和 TensorRT 采用相同的内核映射策略，需在 CUDA 内�
 与 PyTorch 和 TensorRT 相比，FlashTensor 在全局内存中的内存占用显著更小，尤其是当序列长度增加时。
 这种差异的主要原因在于 PyTorch 和 TensorRT 在慢速全局内存中分配与序列长度成二次方关系$O(\text{seqlen}^2)$的大中间张量，而 FlashTensor 旨在最小化此类大张量的分配，从而在序列长度增长时保持更高效稳定的内存使用。  
 
-
-\section{与算子库的对比}
-本研究进一步将 FlashTensor 和 TensorRT 与手工调优的算子库 FlashAttention 和 FlashInfer 进行对比，这两个库均仅支持标准注意力（Vanilla Attention）和 Gemma2。  
-
 \begin{figure}[htbp]
     \centering
-    % \vspace{-0.5em}
-    \begin{minipage}[ht]{\linewidth}
-        \includegraphics[width=\linewidth]{figures/flashtensor/exp_gemma2-crop.pdf}
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \includegraphics[width=0.75\linewidth]{figures/flashtensor/exp_gemma2-crop.pdf}
     \end{minipage}
-    % \vspace{-1em}
-    \\
-\centering \small (a) 标准注意力与 Gemma2 的差异。绿色算子为 Gemma2 的额外结构。  
-    \begin{minipage}[ht]{\linewidth}
-        \includegraphics[width=\linewidth]{figures/flashtensor/attn_time-crop.pdf}
+    \vspace{-0.5em}
+    \caption*{\small (a) 标准注意力与 Gemma2 的差异}
+    
+    \begin{minipage}[t]{\linewidth}
+        \centering
+        \includegraphics[width=0.7\linewidth]{figures/flashtensor/attn_time-crop.pdf}
     \end{minipage}
-    % \vspace{-1em}
-    \\
-\centering \small (b) 标准注意力与 Gemma2 的执行时间。截断条形图上标注了执行时间（ms）。  
-    % \vspace{-0.7em}
+    \vspace{-0.5em}
+    \caption*{\small (b) 标准注意力与 Gemma2 的执行时间}
+    
     \caption{与算子库的对比}
-    % \vspace{-1.5em}
     \label{fig:lib_cmp}
-\end{figure}  
+\end{figure}
 
-如 \Cref{fig:lib_cmp}(a) 所示，Gemma2~\cite{team2024gemma2} 在标准注意力中引入了逻辑软上限。
-在 \Cref{fig:lib_cmp}(b) 中，FlashTensor 与 FlashInfer 和 FlashAttention 实现了相当的性能——后两者均采用基于领域知识和人工调优的手工算子。
+\subsection{算子库对比实验}
+本研究进一步将 FlashTensor 和 TensorRT 与手工调优的算子库 FlashAttention 和 FlashInfer 进行对比，这两个库均仅支持标准注意力(Vanilla Attention)和 Gemma2。  
+
+% \begin{figure}[htbp]
+%     \centering
+%     % \vspace{-0.5em}
+%     \begin{minipage}[ht]{\linewidth}
+%         \includegraphics[width=\linewidth]{figures/flashtensor/exp_gemma2-crop.pdf}
+%     \end{minipage}
+%     % \vspace{-1em}
+%     \\
+% \centering \small (a) 标准注意力与 Gemma2 的差异。绿色算子为 Gemma2 的额外结构。  
+%     \begin{minipage}[ht]{\linewidth}
+%         \includegraphics[width=\linewidth]{figures/flashtensor/attn_time-crop.pdf}
+%     \end{minipage}
+%     % \vspace{-1em}
+%     \\
+% \centering \small (b) 标准注意力与 Gemma2 的执行时间。截断条形图上标注了执行时间(ms)。  
+%     % \vspace{-0.7em}
+%     \caption{与算子库的对比}
+%     % \vspace{-1.5em}
+%     \label{fig:lib_cmp}
+% \end{figure}  
+
+
+
+如\Cref{fig:lib_cmp}(a) 所示，Gemma2~\cite{team2024gemma2} 在标准注意力中引入了逻辑软上限。
+在\Cref{fig:lib_cmp}(b) 中，FlashTensor 与 FlashInfer 和 FlashAttention 实现了相当的性能——后两者均采用基于领域知识和人工调优的手工算子，截断条形图上标注了执行时间(ms)。
 尽管 FlashTensor 未超越这些算子库，但其优势在于无需手动调优即可跨多种场景实现泛化和优化。
 
+
+
+
+\subsection{性能分解分析}
+本研究进行了分解分析以展示FlashTensor各个组件的性能影响，如\Cref{fig:breakdown}所示。
 \begin{figure}[ht]
     \centering
     % \vspace{-1.8em}
     % \vspace{-1.6em}
-    \includegraphics[width=\linewidth]{figures/flashtensor/breakdown.pdf}
+    \includegraphics[width=0.85\linewidth]{figures/flashtensor/breakdown.pdf}
     % \vspace{-1.8em}
-    \caption{H100上核心模块的性能分解。Fission表示将复杂算子拆分为基本算子。B.T.表示基于广播属性的变换。K.M. w/o Fusion表示未融合的内核映射。V.T.表示基于值属性的变换。}
+    \caption{H100上核心模块的性能分解分析}
     % \vspace{-0.5em}
     \label{fig:breakdown}
 \end{figure}
 
-
-\section{分解分析}
-本研究进行了分解分析以展示FlashTensor各个组件的性能影响，如\Cref{fig:breakdown}所示。
-
 基线为PyTorch，加速比为1。
-FlashTensor首先应用算子裂变（operator fission）将复杂算子分解为基本算子，例如将\textit{Softmax}转换为\textit{Exp}、\textit{Reduce}和\textit{Div}。
+FlashTensor首先应用算子裂变(Fission)将复杂算子分解为基本算子，例如将{Softmax}转换为{Exp}、{Reduce}和{Div}。
 这会引入更小的算子，但增加内存访问量，从而降低整体性能。
-接下来，提出基于广播属性的变换（B.T.）以最小化中间张量的大小。
+接下来，提出基于广播属性的变换(B.T.)以最小化中间张量的大小。
 这不仅提升了性能，还通过满足硬件约束为未来的融合操作创造了条件。
-然后采用内核映射（K.M. w/o Fusion）来识别具有高并行效率的凸和非凸内核。
+然后采用内核映射(K.M. w/o Fusion)来识别具有高并行效率的凸和非凸内核。
 所识别的内核会重新计算一些算子以解决非凸内核的循环依赖问题，因此在未融合的情况下仍会导致性能下降。
-融合操作通过减少内存访问开销并利用所识别内核的高并行效率，带来了最显著的性能提升，如\Cref{fig:breakdown}所示，加速比可达14.2$\times$。
-最后，基于值属性的变换（V.T.）利用因果掩码消除冗余计算，在所有模型上进一步实现了近2$\times$的额外加速。
+融合操作通过减少内存访问开销并利用所识别内核的高并行效率，带来了最显著的性能提升，如\Cref{fig:breakdown}所示，加速比可达14.2倍。
+最后，基于值属性的变换(V.T.)利用因果掩码消除冗余计算，在所有模型上进一步实现了近2倍的额外加速。
 
 
-\subsection{各阶段分析}
+
+% \subsection{各阶段分析}
 本研究进一步进行了各阶段分析，以分别展示变换和内核识别规则对性能的影响。
 
 (1)\textbf{变换阶段}:
 FlashTensor提出了一系列基于广播属性的变换规则，以最小化中间张量的大小。
-如\Cref{tab:transform}所示，中间张量的总大小显著减少了约3 GiB，这与\Cref{fig:seqlen_mem_flops}一致，实现了更低的内存使用和内存访问开销。此外，变换阶段的搜索成本非常小，约为数百毫秒。
+如\Cref{tab:transform}所示，序列长度为4096时，中间张量的总大小显著减少了约3 GiB，这与\Cref{fig:seqlen_mem_flops}一致，实现了更低的内存使用和内存访问开销。此外，变换阶段的搜索成本非常小，约为数百毫秒。
 
 
 \begin{table}[ht]
     \centering
     % \footnotesize
-    \caption{序列长度为4096时基于广播变换的中间张量大小变化和执行时间}
+    \caption{基于广播变换的中间张量大小变化和执行时间}
     % \vspace{-0.5em}
     \begin{tabular}{ccc}
        \toprule
-       模型  & 中间张量大小变化 & 时间（ms） \\
+       模型  & 中间张量大小变化 & 时间(ms) \\
        \hline
        \(H_{2}O\)  & -3.30 GiB & 169.1 \\
        % \hline
@@ -663,16 +709,29 @@ FlashTensor提出了一系列基于广播属性的变换规则，以最小化中
     % \vspace{-1.5em}
 \end{table}
 
+
+
+
+(2)\textbf{内核映射阶段}：
+在确定最佳内核映射策略时，FlashTensor由于进一步引入了非凸内核定义，面临着巨大的搜索空间。
+如\Cref{tab:search}所示，\#Op表示核心模块中的算子数量。\#Candidate表示剪枝后的候选数，括号内为可能的候选数。
+即使算子数量较少，搜索空间仍然非常庞大。
+例如，Keyformer的注意力模块仅包含24个算子，但整个搜索空间的大小达到了1.69亿。
+
+如\Cref{tab:search}所示，Korch和TVM的调优时间很长，至少约2小时，但仍只能找到次优策略。
+较长的调优时间主要来自对每个识别出的候选内核进行性能分析，需要大量时间来发现有效的调度方案。
+然而，尽管FlashTensor的候选内核数量比Korch多得多，但本研究考虑了张量属性并有效剪枝了可能性能较差的候选内核，显著减少了候选集，从而能够在秒级快速选择最佳内核。
+
 \begin{table}[ht]
     \centering
     % \footnotesize
-    \caption{搜索性能。\#Op表示核心模块中的算子数量。\#Candidate表示剪枝后的候选数，括号内为可能的候选数。}
+    \caption{搜索性能}
     % \vspace{-0.5em}
     \begin{tabular}{cccccc}
     \toprule
       \multirow{2}{*}{模型} &  \multirow{2}{*}{\#Op}  & \#Candidate& \multicolumn{3}{c}{端到端搜索时间} \\
-                              &  & （可能候选数）& FlashTensor & TVM & Korch \\
-      % \hline
+                              &  & (可能候选数)& FlashTensor & TVM & Korch \\
+      \hline
       \(H_{2}O\)      & 16 & 5 (297K) & 3.03秒    & 1.8小时   & 1.6小时\\
       % \hline
       RoCo      & 19 & 7 (260万) & 8.40秒    & 2.3小时   & 3.5小时\\
@@ -693,19 +752,10 @@ FlashTensor提出了一系列基于广播属性的变换规则，以最小化中
 \end{table}
 
 
-
-(2)\textbf{内核映射阶段}
-在确定最佳内核映射策略时，FlashTensor由于进一步引入了非凸内核定义，面临着巨大的搜索空间。
-如\Cref{tab:search}所示，即使算子数量较少，搜索空间仍然庞大。
-例如，Keyformer的注意力模块仅包含24个算子，但整个搜索空间的大小达到了1.69亿。
-
-如\Cref{tab:search}所示，Korch和TVM的调优时间很长，至少约2小时，但仍只能找到次优策略。
-较长的调优时间主要来自对每个识别出的候选内核进行性能分析，需要大量时间来发现有效的调度方案。
-然而，尽管FlashTensor的候选内核数量比Korch多得多，但本研究考虑了张量属性并有效剪枝了可能性能较差的候选内核，显著减少了候选集，从而能够在秒级快速选择最佳内核。
-
 \section{结论}
-本研究提出了 FlashTensor，这是一个利用细粒度张量属性优化张量程序的系统，旨在解决 DNN 模型，特别是长上下文任务中，因中间张量庞大而导致的内存开销大、计算效率低的问题。
-本章首先总结了归约依赖、广播、大小和值这四个关键的张量属性，并设计了张量属性识别器，通过基于数据流的算法系统地分析计算图，准确捕获每个张量的属性。然后，基于这些属性，本研究提出了张量属性感知优化方法，包括代数等价图变换和非凸内核映射，同时采用轻量级方案搜索方法，以找到最优的优化方案。
-实验结果表明，与八种最先进的方法相比，FlashTensor 在 H100 上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍，在 A100 上分别为 1.86 倍和 3.70 倍，同时显著降低了内存开销。消融实验验证了 FlashTensor 各个组件的有效性和不可或缺性。
+本研究提出了 FlashTensor，这是一个利用细粒度张量属性优化张量程序的系统，旨在解决大模型后训练过程中，特别是长上下文任务中，因中间张量庞大而导致的内存开销大、算子计算效率低的问题。
+本章首先总结了归约依赖、广播、大小和值这四个关键的张量属性，并设计了张量属性识别器，通过基于数据流的算法系统地分析计算图，准确捕获每个张量的属性。
+然后，基于这些属性，本研究提出了张量属性感知优化方法，包括代数等价图变换和非凸内核映射，同时采用轻量级方案搜索方法，以找到最优的优化方案。
+实验结果表明，与八种最先进的方法相比，FlashTensor 在 H100 上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍，在 A100 上分别为 1.86 倍和 3.70 倍。
 
 % 未来，本研究计划进一步扩展 FlashTensor 的应用范围，将其应用于更多类型的 DNN 模型和任务中。同时，我们将探索如何更好地结合硬件特性，进一步优化张量属性感知的优化策略，以实现更高的计算效率和更低的资源消耗。此外，我们还将研究如何将 FlashTensor 与其他深度学习优化技术相结合，形成更强大的优化框架，推动深度学习在更多领域的应用和发展。

@@ -1,76 +1,94 @@
 % !TeX root = ../thuthesis-example.tex
 
-\chapter{引用文献的标注}
+\chapter{总结}
 
-模板支持 BibTeX 和 BibLaTeX 两种方式处理参考文献。
-下文主要介绍 BibTeX 配合 \pkg{natbib} 宏包的主要使用方法。
+本研究围绕大语言模型后训练过程中在算子计算效率低、内存利用不足和通信开销大关键问题，提出了三个创新系统，有效提升了模型后训练效率。
 
+针对大模型后训练长序列领域数据导致的中间张量内存开销大、算子计算效率低问题，本文提出了细粒度张量属性感知的编译优化系统FlashTensor。
+该系统先总结出归约依赖、广播、大小和值四个张量关键属性，设计张量属性识别器进行准确捕获；
+再基于属性开展代数等价图变换、非凸内核映射等优化，并通过轻量级搜索获取最优方案。
+实验显示，相比八种先进方法，FlashTensor在H100 GPU上的端到端性能和核心模块性能平均加速比达1.50倍和3.24倍，在A100 GPU上分别为1.86倍和3.70倍。
 
-\section{顺序编码制}
+针对高效参数微调时冻结参数导致内存利用率不足的问题，本文构建了基于弹性张量的内存管理系统mTuner。
+通过分析后训练PEFT微调内存使用情况，本研究发现权重和激活内存可动态调整，进而提出弹性张量概念，让张量大小能灵活变化以提升内存利用率。
+基于此，mTuner可感知内存状态并制定自适应执行计划。
+实验表明，相较于先进训练系统，mTuner在各类大语言模型上显著提升性能，吞吐量最高提升1.51倍（平均1.28倍），还能在3小时内完成Llama-2-13B模型微调，增强其数学能力。
 
-在顺序编码制下，默认的 \cs{cite} 命令同 \cs{citep} 一样，序号置于方括号中，
-引文页码会放在括号外。
-统一处引用的连续序号会自动用短横线连接。
-
-\thusetup{
-  cite-style = super,
-}
-\noindent
-\begin{tabular}{l@{\quad$\Rightarrow$\quad}l}
-  \verb|\cite{zhangkun1994}|               & \cite{zhangkun1994}               \\
-  \verb|\citet{zhangkun1994}|              & \citet{zhangkun1994}              \\
-  \verb|\citep{zhangkun1994}|              & \citep{zhangkun1994}              \\
-  \verb|\cite[42]{zhangkun1994}|           & \cite[42]{zhangkun1994}           \\
-  \verb|\cite{zhangkun1994,zhukezhen1973}| & \cite{zhangkun1994,zhukezhen1973} \\
-\end{tabular}
-
-
-也可以取消上标格式，将数字序号作为文字的一部分。
-建议全文统一使用相同的格式。
-
-\thusetup{
-  cite-style = inline,
-}
-\noindent
-\begin{tabular}{l@{\quad$\Rightarrow$\quad}l}
-  \verb|\cite{zhangkun1994}|               & \cite{zhangkun1994}               \\
-  \verb|\citet{zhangkun1994}|              & \citet{zhangkun1994}              \\
-  \verb|\citep{zhangkun1994}|              & \citep{zhangkun1994}              \\
-  \verb|\cite[42]{zhangkun1994}|           & \cite[42]{zhangkun1994}           \\
-  \verb|\cite{zhangkun1994,zhukezhen1973}| & \cite{zhangkun1994,zhukezhen1973} \\
-\end{tabular}
+针对大模型对齐时异构上下文高效切换难题，本文提出了基于上下文高效切换的通信优化系统PUZZLE。
+通过抽象上下文概念，从阶段内和阶段间两个维度优化：阶段内提出基于亲和性的时间共享切换方案与混合方案，利用上下文亲和性实现计算重叠，减少切换空闲时间与开销；阶段间制定基于相似性的切换策略，降低通信和参数重组成本。
+实验结果表明，与先进的RLHF训练系统DeepSpeed-Chat相比，PUZZLE在不同模型规模和GPU配置下性能显著提升，最高加速比达2.12倍，同时有效降低上下文切换开销，扩展性良好。 
 
 
 
-\section{著者-出版年制}
+% 模板支持 BibTeX 和 BibLaTeX 两种方式处理参考文献。
+% 下文主要介绍 BibTeX 配合 \pkg{natbib} 宏包的主要使用方法。
 
-著者-出版年制下的 \cs{cite} 跟 \cs{citet} 一样。
 
-\thusetup{
-  cite-style = author-year,
-}
-\noindent
-\begin{tabular}{@{}l@{$\Rightarrow$}l@{}}
-  \verb|\cite{zhangkun1994}|                & \cite{zhangkun1994}                \\
-  \verb|\citet{zhangkun1994}|               & \citet{zhangkun1994}               \\
-  \verb|\citep{zhangkun1994}|               & \citep{zhangkun1994}               \\
-  \verb|\cite[42]{zhangkun1994}|            & \cite[42]{zhangkun1994}            \\
-  \verb|\citep{zhangkun1994,zhukezhen1973}| & \citep{zhangkun1994,zhukezhen1973} \\
-\end{tabular}
+% \section{顺序编码制}
 
-\vskip 2ex
-\thusetup{
-  cite-style = super,
-}
-注意，引文参考文献的每条都要在正文中标注
-\cite{zhangkun1994,zhukezhen1973,dupont1974bone,zhengkaiqing1987,%
-  jiangxizhou1980,jianduju1994,merkt1995rotational,mellinger1996laser,%
-  bixon1996dynamics,mahui1995,carlson1981two,taylor1983scanning,%
-  taylor1981study,shimizu1983laser,atkinson1982experimental,%
-  kusch1975perturbations,guangxi1993,huosini1989guwu,wangfuzhi1865songlun,%
-  zhaoyaodong1998xinshidai,biaozhunhua2002tushu,chubanzhuanye2004,%
-  who1970factors,peebles2001probability,baishunong1998zhiwu,%
-  weinstein1974pathogenic,hanjiren1985lun,dizhi1936dizhi,%
-  tushuguan1957tushuguanxue,aaas1883science,fugang2000fengsha,%
-  xiaoyu2001chubanye,oclc2000about,scitor2000project%
-}。
+% 在顺序编码制下，默认的 \cs{cite} 命令同 \cs{citep} 一样，序号置于方括号中，
+% 引文页码会放在括号外。
+% 统一处引用的连续序号会自动用短横线连接。
+
+% \thusetup{
+%   cite-style = super,
+% }
+% \noindent
+% \begin{tabular}{l@{\quad$\Rightarrow$\quad}l}
+%   \verb|\cite{zhangkun1994}|               & \cite{zhangkun1994}               \\
+%   \verb|\citet{zhangkun1994}|              & \citet{zhangkun1994}              \\
+%   \verb|\citep{zhangkun1994}|              & \citep{zhangkun1994}              \\
+%   \verb|\cite[42]{zhangkun1994}|           & \cite[42]{zhangkun1994}           \\
+%   \verb|\cite{zhangkun1994,zhukezhen1973}| & \cite{zhangkun1994,zhukezhen1973} \\
+% \end{tabular}
+
+
+% 也可以取消上标格式，将数字序号作为文字的一部分。
+% 建议全文统一使用相同的格式。
+
+% \thusetup{
+%   cite-style = inline,
+% }
+% \noindent
+% \begin{tabular}{l@{\quad$\Rightarrow$\quad}l}
+%   \verb|\cite{zhangkun1994}|               & \cite{zhangkun1994}               \\
+%   \verb|\citet{zhangkun1994}|              & \citet{zhangkun1994}              \\
+%   \verb|\citep{zhangkun1994}|              & \citep{zhangkun1994}              \\
+%   \verb|\cite[42]{zhangkun1994}|           & \cite[42]{zhangkun1994}           \\
+%   \verb|\cite{zhangkun1994,zhukezhen1973}| & \cite{zhangkun1994,zhukezhen1973} \\
+% \end{tabular}
+
+
+
+% \section{著者-出版年制}
+
+% 著者-出版年制下的 \cs{cite} 跟 \cs{citet} 一样。
+
+% \thusetup{
+%   cite-style = author-year,
+% }
+% \noindent
+% \begin{tabular}{@{}l@{$\Rightarrow$}l@{}}
+%   \verb|\cite{zhangkun1994}|                & \cite{zhangkun1994}                \\
+%   \verb|\citet{zhangkun1994}|               & \citet{zhangkun1994}               \\
+%   \verb|\citep{zhangkun1994}|               & \citep{zhangkun1994}               \\
+%   \verb|\cite[42]{zhangkun1994}|            & \cite[42]{zhangkun1994}            \\
+%   \verb|\citep{zhangkun1994,zhukezhen1973}| & \citep{zhangkun1994,zhukezhen1973} \\
+% \end{tabular}
+
+% \vskip 2ex
+% \thusetup{
+%   cite-style = super,
+% }
+% 注意，引文参考文献的每条都要在正文中标注
+% \cite{zhangkun1994,zhukezhen1973,dupont1974bone,zhengkaiqing1987,%
+%   jiangxizhou1980,jianduju1994,merkt1995rotational,mellinger1996laser,%
+%   bixon1996dynamics,mahui1995,carlson1981two,taylor1983scanning,%
+%   taylor1981study,shimizu1983laser,atkinson1982experimental,%
+%   kusch1975perturbations,guangxi1993,huosini1989guwu,wangfuzhi1865songlun,%
+%   zhaoyaodong1998xinshidai,biaozhunhua2002tushu,chubanzhuanye2004,%
+%   who1970factors,peebles2001probability,baishunong1998zhiwu,%
+%   weinstein1974pathogenic,hanjiren1985lun,dizhi1936dizhi,%
+%   tushuguan1957tushuguanxue,aaas1883science,fugang2000fengsha,%
+%   xiaoyu2001chubanye,oclc2000about,scitor2000project%
+% }。

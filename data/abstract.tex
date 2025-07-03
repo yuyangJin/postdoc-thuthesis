@@ -9,11 +9,13 @@
   围绕上述挑战，本文在人工智能后训练性能优化方面开展了深入研究，主要贡献包括：
 
   1. 针对算子计算效率低的问题，提出了基于细粒度张量属性的算子编译优化方法 FlashTensor，通过识别和利用归约维度等细粒度张量属性，扩大优化空间，搜索更优的算子拆分与融合方案，提升了算子执行效率。
-  实验表明，与最先进的方法相比，FlashTensor 在 H100 上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍。
+  实验结果表明，与最先进的方法相比，FlashTensor 在 H100 GPU上的端到端性能和核心模块性能平均加速比分别达到 1.50 倍和 3.24 倍。
   
-  2. 针对内存使用率不足的问题，提出了基于弹性张量的大模型微调内存优化方法 MTuner，通过动态调整固定权重和动态激活值的内存分配策略，优化了内存布局，降低了内存峰值，从而提升整体训练效率。
+  2. 针对内存使用率不足的问题，提出了基于弹性张量的大模型微调内存优化方法 mTuner，通过动态调整固定权重和动态激活值的内存分配策略，优化了内存布局，降低了内存峰值，从而提升整体训练效率。
+  实验结果表明，与最先进的训练系统相比，mTuner 在各种规模的大语言模型上实现了显著的性能提升，吞吐量最高提升可达 1.51 倍。
   
-  3. 针对数据传输开销大的问题，提出了基于轻量级上下文切换的后训练通信优化方法 Puzzle，通过优化生存、推理和训练不同阶段的并行策略与数据传输方式，减少了通信量，降低了通信成本。
+  3. 针对数据传输开销大的问题，提出了基于轻量级上下文切换的后训练通信优化方法 PUZZLE，通过优化生成、推理和训练不同阶段的并行策略与数据传输方式，减少了通信量，降低了通信成本。
+  实验结果表明，与最先进的后训练对齐系统相比，PUZZLE 在不同模型规模和 GPU 配置下均实现了显著的性能提升，加速比最高可达 2.12 倍。
 
   % 关键词用“英文逗号”分隔，输出时会自动处理为正确的分隔符
   \thusetup{
@@ -29,10 +31,13 @@
   The main contributions are as follows:
 
   1. To address the problem of low operator calculation efficiency, an operator compilation optimization method named FlashTensor based on fine-grained tensor properties is proposed. By identifying and utilizing fine-grained tensor properties such as reduction dimensions, it expands the optimization space, searches for better operator splitting and fusion schemes, and improves the operator execution efficiency.
+  Experimental results show that compared with the state-of-the-art methods, FlashTensor achieves average speedups of 1.50 $\times$ and 3.24 $\times$ in end-to-end performance and core module performance on H100 GPUs, respectively. 
 
-  2. In response to the problem of insufficient memory utilization, an MTuner method for memory optimization of large model fine-tuning based on elastic tensors is proposed. Through dynamically adjusting the memory allocation strategies of fixed weights and dynamic activation values, it optimizes the memory layout and reduces the memory peak, thereby improving the overall training efficiency.
+  2. In response to the problem of insufficient memory utilization, an mTuner method for memory optimization of large model fine-tuning based on elastic tensors is proposed. Through dynamically adjusting the memory allocation strategies of fixed weights and dynamic activation values, it optimizes the memory layout and reduces the memory peak, thereby improving the overall training efficiency.
+  The results demonstrate that mTuner significantly improves the performance of large language models of various scales compared with the most advanced training systems, with the highest throughput increase reaching 1.51$\times$. 
 
-  3. Regarding the problem of high data transmission overhead, a post-training communication optimization method named Puzzle based on lightweight context switching is proposed. By optimizing the parallel strategies and data transmission methods in different stages of survival, inference, and training, it reduces the communication volume and lowers the communication cost.
+  3. Regarding the problem of high data transmission overhead, a post-training communication optimization method named PUZZLE based on lightweight context switching is proposed. By optimizing the parallel strategies and data transmission methods in different stages of survival, inference, and training, it reduces the communication volume and lowers the communication cost.
+  Experimental results indicate that PUZZLE achieves significant performance improvements under different model scales and GPU configurations compared with the state-of-the-art post-training alignment systems, with the highest speedup reaching 2.12$\times$.
   
   % Use comma as separator when inputting
   \thusetup{
